@@ -1,0 +1,3423 @@
+/* ============================================================
+   MyGigLife - Main Stylesheet
+   ============================================================ */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Patrick+Hand&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
+
+/* ============================================================
+   CSS Custom Properties
+   ============================================================ */
+:root {
+  /* Background colors */
+  --bg-cream: #f5f0e8;
+  --bg-white: #ffffff;
+  --bg-kraft: #ede6d8;
+
+  /* Text colors */
+  --text-primary: #4a3f35;
+  --text-secondary: #8a7a60;
+
+  /* Borders */
+  --border-light: #c9b99a;
+
+  /* Header */
+  --header-bg: #4a3f35;
+  --header-text: #f5f0e8;
+
+  /* Accent colors */
+  --accent-gold: #e6d44d;
+  --accent-red: #d32f2f;
+  --accent-blue: #2196f3;
+
+  /* Status: Wishlist */
+  --wishlist-bg: #fff3a8;
+  --wishlist-border: #e6d44d;
+  --wishlist-text: #8a7a00;
+
+  /* Status: Booked */
+  --booked-bg: #b8e6b8;
+  --booked-border: #4caf50;
+  --booked-text: #2e7d32;
+
+  /* Status: Attended */
+  --attended-bg: #a8d4f5;
+  --attended-border: #2196f3;
+  --attended-text: #1565c0;
+
+  /* Status: DNA */
+  --dna-bg: #f5a8a8;
+  --dna-border: #d32f2f;
+  --dna-text: #d32f2f;
+
+  /* Layout */
+  --header-height: 56px;
+  --nav-height: 72px;
+  --screen-padding: 15px;
+  --card-radius: 8px;
+}
+
+/* ============================================================
+   Reset & Base
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  background: var(--bg-cream);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+input, textarea, select {
+  font-family: 'Source Sans 3', sans-serif;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ============================================================
+   App Shell
+   ============================================================ */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ============================================================
+   Header
+   ============================================================ */
+#app-header {
+  height: var(--header-height);
+  background: var(--header-bg);
+  color: var(--header-text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--screen-padding);
+  flex-shrink: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+#app-title {
+  font-family: 'Caveat', cursive;
+  font-style: italic;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--header-text);
+  letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   CHANGE 1: Typography & Touch Targets
+   ============================================================ */
+
+#header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--header-text);
+  font-size: 20px;
+  transition: background 0.2s;
+}
+
+.header-btn:hover, .header-btn:active {
+  background: rgba(255,255,255,0.15);
+}
+
+/* Back header (for sub-screens) */
+#sub-header {
+  height: var(--header-height);
+  background: var(--header-bg);
+  color: var(--header-text);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--screen-padding);
+  gap: 8px;
+  flex-shrink: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.sub-header-back {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--header-text);
+  font-size: 22px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.sub-header-back:active {
+  background: rgba(255,255,255,0.15);
+}
+
+.sub-header-title {
+  font-family: 'Caveat', cursive;
+  font-size: 24px;
+  font-weight: 700;
+  flex: 1;
+}
+
+.sub-header-action {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  color: var(--accent-gold);
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.sub-header-action:active {
+  background: rgba(255,255,255,0.15);
+}
+
+/* ============================================================
+   Main Content Area
+   ============================================================ */
+#main-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ============================================================
+   Screens
+   ============================================================ */
+.screen {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--bg-cream);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  -webkit-overflow-scrolling: touch;
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Sub-screens (slide in from right) */
+.sub-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-cream);
+  z-index: 200;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sub-screen.active {
+  transform: translateX(0);
+}
+
+.sub-screen-content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ============================================================
+   Bottom Navigation
+   ============================================================ */
+#bottom-nav {
+  height: var(--nav-height);
+  background: var(--bg-white);
+  border-top: 1.5px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-shrink: 0;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  transition: all 0.2s;
+  position: relative;
+  height: var(--nav-height);
+  flex: 1;
+}
+
+.nav-item.active .nav-icon {
+  transform: translateY(-2px);
+}
+
+.nav-icon {
+  font-size: 22px;
+  line-height: 1;
+  transition: transform 0.2s;
+}
+
+.nav-label {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+
+.nav-item.active .nav-label {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Add Gig button (center, elevated) */
+.nav-item-add {
+  position: relative;
+  top: -12px;
+}
+
+.nav-add-circle {
+  width: 52px;
+  height: 52px;
+  background: var(--accent-gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nav-add-circle:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.nav-add-icon {
+  font-size: 26px;
+  color: var(--text-primary);
+  font-weight: 300;
+  line-height: 1;
+}
+
+/* ============================================================
+   Calendar Screen
+   ============================================================ */
+#screen-calendar {
+  padding-bottom: 20px;
+}
+
+.calendar-month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px var(--screen-padding);
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.month-nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.month-nav-btn:active {
+  background: var(--bg-kraft);
+  color: var(--text-primary);
+}
+
+.month-name {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+/* Calendar grid */
+.calendar-grid-wrap {
+  background: var(--bg-white);
+  padding: 0 var(--screen-padding) 12px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.calendar-day-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
+}
+
+.cal-day-header {
+  text-align: center;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 16px;
+  color: var(--text-secondary);
+  padding: 6px 0;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.cal-cell {
+  min-height: 52px;
+  min-width: 44px;
+  padding: 4px 2px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.cal-cell:active {
+  background: var(--bg-kraft);
+}
+
+.cal-cell.empty {
+  cursor: default;
+}
+
+.cal-date {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  color: var(--text-primary);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  transition: background 0.15s;
+}
+
+/* Today: dark circle */
+.cal-cell.today .cal-date {
+  background: var(--text-primary);
+  color: var(--bg-cream);
+  font-weight: 700;
+}
+
+/* Status circles — shown when a gig exists on that date */
+.cal-date.wishlist  { background: var(--wishlist-bg);  color: var(--wishlist-text);  border: 2px solid var(--wishlist-border); font-weight: 700; }
+.cal-date.booked    { background: var(--booked-bg);    color: var(--booked-text);    border: 2px solid var(--booked-border);   font-weight: 700; }
+.cal-date.attended  { background: var(--attended-bg);  color: var(--attended-text);  border: 2px solid var(--attended-border); font-weight: 700; }
+.cal-date.dna       { background: var(--dna-bg);       color: var(--dna-text);       border: 2px solid var(--dna-border);      font-weight: 700; }
+.cal-date.multi-gig { background: var(--bg-kraft);     color: var(--text-primary);   border: 2px solid var(--accent-red);      font-weight: 700; }
+
+.cal-cell.other-month .cal-date {
+  color: var(--border-light);
+  opacity: 0.5;
+}
+
+.cal-clash {
+  font-size: 9px;
+  font-family: 'Patrick Hand', sans-serif;
+  color: var(--accent-red);
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* Status legend */
+.status-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px var(--screen-padding);
+  background: var(--bg-kraft);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-label {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Coming Up section */
+.coming-up-section {
+  padding: var(--screen-padding);
+}
+
+.section-title {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.coming-up-empty {
+  font-family: 'Patrick Hand', sans-serif;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 20px;
+  font-size: 15px;
+}
+
+/* Mini gig card */
+.mini-gig-card {
+  background: var(--bg-white);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border-light);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.mini-gig-card:active {
+  transform: scale(0.98);
+}
+
+.mini-card-strip {
+  width: 5px;
+  border-radius: 3px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.mini-card-strip.wishlist { background: var(--wishlist-border); }
+.mini-card-strip.booked { background: var(--booked-border); }
+.mini-card-strip.attended { background: var(--attended-border); }
+.mini-card-strip.dna { background: var(--dna-border); }
+
+.mini-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.mini-card-artist {
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mini-card-detail {
+  font-size: 15px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 400;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mini-card-countdown {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--booked-text);
+  background: var(--booked-bg);
+  border: 1px solid var(--booked-border);
+  padding: 3px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mini-card-countdown.wishlist {
+  color: var(--wishlist-text);
+  background: var(--wishlist-bg);
+  border-color: var(--wishlist-border);
+}
+
+/* ============================================================
+   My Gigs Screen
+   ============================================================ */
+#screen-gigs {
+  display: flex;
+  flex-direction: column;
+}
+
+.gigs-filter-bar {
+  background: var(--bg-white);
+  border-bottom: 1.5px solid var(--border-light);
+  padding: 10px var(--screen-padding) 0;
+  flex-shrink: 0;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 10px;
+}
+
+.filter-tabs::-webkit-scrollbar { display: none; }
+
+.filter-tab {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 8px 16px;
+  min-height: 44px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border-light);
+  background: var(--bg-cream);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.filter-tab.active-all {
+  background: var(--text-primary);
+  border-color: var(--text-primary);
+  color: var(--bg-cream);
+}
+
+.filter-tab.active-wishlist {
+  background: var(--wishlist-bg);
+  border-color: var(--wishlist-border);
+  color: var(--wishlist-text);
+}
+
+.filter-tab.active-booked {
+  background: var(--booked-bg);
+  border-color: var(--booked-border);
+  color: var(--booked-text);
+}
+
+.filter-tab.active-attended {
+  background: var(--attended-bg);
+  border-color: var(--attended-border);
+  color: var(--attended-text);
+}
+
+.filter-tab.active-dna {
+  background: var(--dna-bg);
+  border-color: var(--dna-border);
+  color: var(--dna-text);
+}
+
+.gigs-search-wrap {
+  padding: 10px var(--screen-padding);
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border-light);
+  flex-shrink: 0;
+}
+
+.gigs-search-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  min-height: 52px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border-light);
+  background: var(--bg-cream);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.gigs-search-input:focus {
+  border-color: var(--text-secondary);
+}
+
+.gigs-search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.gigs-list-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--screen-padding);
+  -webkit-overflow-scrolling: touch;
+}
+
+.gigs-section-header {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 16px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px dashed var(--border-light);
+}
+
+.gigs-section-header:first-child {
+  margin-top: 0;
+}
+
+/* Gig card */
+.gig-card {
+  background: var(--bg-white);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border-light);
+  margin-bottom: 10px;
+  display: flex;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.gig-card:active {
+  transform: scale(0.99);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+
+.gig-card-strip {
+  width: 8px;
+  flex-shrink: 0;
+}
+
+.gig-card-strip.wishlist { background: var(--wishlist-border); }
+.gig-card-strip.booked { background: var(--booked-border); }
+.gig-card-strip.attended { background: var(--attended-border); }
+.gig-card-strip.dna { background: var(--dna-border); }
+
+.gig-card-body {
+  flex: 1;
+  padding: 12px 10px;
+  min-width: 0;
+}
+
+.gig-card-artist {
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gig-card-date-venue {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gig-card-times {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.gig-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.status-badge {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 10px;
+}
+
+.status-badge.wishlist { background: var(--wishlist-bg); color: var(--wishlist-text); border: 1px solid var(--wishlist-border); }
+.status-badge.booked { background: var(--booked-bg); color: var(--booked-text); border: 1px solid var(--booked-border); }
+.status-badge.attended { background: var(--attended-bg); color: var(--attended-text); border: 1px solid var(--attended-border); }
+.status-badge.dna { background: var(--dna-bg); color: var(--dna-text); border: 1px solid var(--dna-border); }
+
+.countdown-pill {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--booked-bg);
+  color: var(--booked-text);
+  border: 1px solid var(--booked-border);
+}
+
+.star-rating-display {
+  color: var(--accent-gold);
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.gig-card-chevron {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  color: var(--border-light);
+  font-size: 20px;
+}
+
+.gigs-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.gigs-empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.gigs-empty-title {
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.gigs-empty-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+   Add Gig Modal
+   ============================================================ */
+#modal-add-gig {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--bg-cream);
+}
+
+#modal-add-gig.open {
+  transform: translateY(0);
+}
+
+.modal-header {
+  height: var(--header-height);
+  background: var(--header-bg);
+  color: var(--header-text);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--screen-padding);
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.modal-title {
+  font-family: 'Caveat', cursive;
+  font-size: 24px;
+  font-weight: 700;
+  flex: 1;
+}
+
+.modal-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--header-text);
+  transition: background 0.2s;
+}
+
+.modal-close-btn:active {
+  background: rgba(255,255,255,0.15);
+}
+
+.modal-scroll {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Notebook form styling */
+.notebook-form {
+  background: var(--bg-white);
+  margin: 15px;
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  position: relative;
+  /* Ruled lines */
+  background-image:
+    linear-gradient(to right, #ffb3b3 1px, transparent 1px),
+    repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 31px,
+      #d4c9b8 31px,
+      #d4c9b8 32px
+    );
+  background-size: 42px 100%, 100% 32px;
+  background-position: 0 0, 0 28px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.notebook-intro {
+  font-family: 'Source Sans 3', sans-serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--text-secondary);
+  padding: 14px 14px 6px 52px;
+  line-height: 32px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  padding: 0 14px 0 52px;
+  min-height: 52px;
+  justify-content: center;
+  border-bottom: none;
+}
+
+.form-field + .form-field {
+  border-top: none;
+}
+
+.form-label {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+  margin-top: 8px;
+  display: block;
+}
+
+.form-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-primary);
+  padding: 4px 0;
+  width: 100%;
+  line-height: 1.4;
+  min-height: 44px;
+}
+
+.form-input::placeholder {
+  color: var(--border-light);
+  font-size: 16px;
+}
+
+.form-input[type="date"] {
+  min-height: 44px;
+}
+
+/* Status toggle */
+.status-toggle-wrap {
+  padding: 10px 14px 10px 52px;
+  display: flex;
+  gap: 10px;
+}
+
+.status-toggle-btn {
+  flex: 1;
+  padding: 12px 10px;
+  min-height: 44px;
+  border-radius: 8px;
+  border: 2px solid var(--border-light);
+  background: var(--bg-cream);
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 16px;
+  color: var(--text-secondary);
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.status-toggle-btn.active-wishlist {
+  background: var(--wishlist-bg);
+  border-color: var(--wishlist-border);
+  color: var(--wishlist-text);
+}
+
+.status-toggle-btn.active-booked {
+  background: var(--booked-bg);
+  border-color: var(--booked-border);
+  color: var(--booked-text);
+}
+
+/* Clash warning */
+.clash-warning {
+  display: none;
+  background: #fff3f3;
+  border: 1px solid var(--dna-border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 0 14px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 14px;
+  color: var(--dna-text);
+}
+
+.clash-warning.visible {
+  display: block;
+}
+
+/* Expandable more details */
+.more-details-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 14px 14px 52px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  color: var(--accent-blue);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border-top: 1px solid rgba(201,185,154,0.3);
+}
+
+.more-details-content {
+  display: none;
+  padding-bottom: 8px;
+}
+
+.more-details-content.expanded {
+  display: block;
+}
+
+.form-select {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-primary);
+  padding: 4px 0;
+  width: 100%;
+  min-height: 44px;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.form-textarea {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-primary);
+  padding: 4px 0;
+  width: 100%;
+  resize: none;
+  min-height: 72px;
+  line-height: 32px;
+}
+
+.form-textarea::placeholder {
+  color: var(--border-light);
+  font-size: 16px;
+}
+
+/* Price field */
+.price-field-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.price-prefix {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+/* Save button */
+.modal-footer {
+  padding: 14px var(--screen-padding);
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0));
+  background: var(--bg-cream);
+  border-top: 1px solid var(--border-light);
+  flex-shrink: 0;
+}
+
+.save-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--text-primary);
+  color: var(--bg-cream);
+  border-radius: 30px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 18px;
+  text-align: center;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.save-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+/* ============================================================
+   Gig Dossier Screen
+   ============================================================ */
+#screen-dossier {
+  background: var(--bg-cream);
+}
+
+.dossier-hero {
+  background: var(--bg-white);
+  padding: 20px var(--screen-padding) 16px;
+  border-bottom: 1px solid var(--border-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.washi-tape-label {
+  display: inline-block;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 12px;
+  padding: 4px 16px;
+  transform: rotate(-2deg);
+  margin-bottom: 12px;
+}
+
+.washi-tape-label.wishlist { background: var(--wishlist-bg); color: var(--wishlist-text); }
+.washi-tape-label.booked { background: var(--booked-bg); color: var(--booked-text); }
+.washi-tape-label.attended { background: var(--attended-bg); color: var(--attended-text); }
+.washi-tape-label.dna { background: var(--dna-bg); color: var(--dna-text); }
+
+.dossier-artist {
+  font-family: 'Caveat', cursive;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.dossier-countdown {
+  display: inline-block;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 14px;
+  padding: 4px 12px;
+  border-radius: 14px;
+  background: var(--booked-bg);
+  color: var(--booked-text);
+  border: 1px solid var(--booked-border);
+  margin-bottom: 8px;
+}
+
+.dossier-cards {
+  padding: 12px var(--screen-padding);
+}
+
+/* Dossier info card */
+.dossier-card {
+  background: var(--bg-white);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border-light);
+  margin-bottom: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.dossier-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.dossier-card-icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+.dossier-card-title {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 18px;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.dossier-card-chevron {
+  color: var(--border-light);
+  font-size: 18px;
+  transition: transform 0.2s;
+}
+
+.dossier-card.collapsed .dossier-card-chevron {
+  transform: rotate(-90deg);
+}
+
+.dossier-card-body {
+  padding: 0 14px 14px;
+  border-top: 1px solid var(--bg-kraft);
+}
+
+.dossier-card.collapsed .dossier-card-body {
+  display: none;
+}
+
+.dossier-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bg-kraft);
+}
+
+.dossier-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.dossier-row-label {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  color: var(--text-secondary);
+  min-width: 90px;
+  padding-top: 1px;
+}
+
+.dossier-row-value {
+  font-size: 16px;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.dossier-row-value.editable {
+  border-bottom: 1px dashed var(--border-light);
+  outline: none;
+  min-height: 22px;
+}
+
+/* Action buttons in dossier */
+.dossier-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  min-height: 44px;
+  border-radius: 8px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  width: 100%;
+  margin-top: 6px;
+  transition: all 0.2s;
+}
+
+.dossier-action-btn.booked-action {
+  background: var(--booked-bg);
+  color: var(--booked-text);
+  border: 1.5px solid var(--booked-border);
+}
+
+.dossier-action-btn.attended-action {
+  background: var(--attended-bg);
+  color: var(--attended-text);
+  border: 1.5px solid var(--attended-border);
+}
+
+.dossier-action-btn.share-action {
+  background: var(--bg-kraft);
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-light);
+}
+
+.dossier-action-btn:active {
+  transform: scale(0.98);
+}
+
+.dossier-dna-link {
+  display: block;
+  text-align: center;
+  font-family: 'Patrick Hand', sans-serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--dna-text);
+  padding: 12px;
+  cursor: pointer;
+}
+
+/* Map/Hotels/Restaurants buttons */
+.venue-action-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.venue-action-btn {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  border: 1px solid var(--accent-blue);
+  color: var(--accent-blue);
+  background: transparent;
+  transition: all 0.2s;
+}
+
+.venue-action-btn:active {
+  background: var(--accent-blue);
+  color: white;
+}
+
+/* Add to cal button */
+.add-to-cal-btn {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  background: var(--bg-kraft);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  transition: all 0.2s;
+}
+
+.add-to-cal-btn:active {
+  background: var(--border-light);
+}
+
+/* Star rating interactive */
+.star-rating-input {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.star-btn {
+  font-size: 20px;
+  color: var(--border-light);
+  transition: color 0.15s;
+  line-height: 1;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+}
+
+.star-btn.filled {
+  color: var(--accent-gold);
+}
+
+/* Notes sticky */
+.sticky-note {
+  background: #fff9e6;
+  border-radius: 4px;
+  padding: 14px;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.08);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  color: var(--text-primary);
+  min-height: 80px;
+  line-height: 1.6;
+}
+
+.sticky-note[contenteditable="true"] {
+  outline: none;
+  border-bottom: 1px dashed var(--border-light);
+}
+
+/* Presale code */
+.presale-code {
+  font-family: monospace;
+  font-size: 16px;
+  letter-spacing: 2px;
+  background: var(--bg-kraft);
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px dashed var(--border-light);
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 6px;
+  transition: background 0.2s;
+}
+
+.presale-code:active {
+  background: var(--border-light);
+}
+
+/* ============================================================
+   Scrapbook Screen
+   ============================================================ */
+#screen-scrapbook {
+  background: #e8e0d0;
+  /* subtle corkboard texture */
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(180,150,100,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(180,150,100,0.1) 0%, transparent 50%);
+}
+
+.scrapbook-header-section {
+  padding: 16px var(--screen-padding) 8px;
+}
+
+.scrapbook-intro {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 8px 0;
+}
+
+.scrapbook-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 10px var(--screen-padding) 20px;
+}
+
+.scrapbook-card {
+  background: var(--bg-white);
+  border-radius: 4px;
+  border: 1px solid var(--border-light);
+  box-shadow: 2px 3px 8px rgba(0,0,0,0.12);
+  cursor: pointer;
+  position: relative;
+  overflow: visible;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.scrapbook-card:nth-child(odd) { transform: rotate(-2deg); }
+.scrapbook-card:nth-child(even) { transform: rotate(1.5deg); }
+.scrapbook-card:nth-child(3n) { transform: rotate(2.5deg); }
+.scrapbook-card:nth-child(4n) { transform: rotate(-1deg); }
+
+.scrapbook-card:active {
+  transform: rotate(0deg) scale(1.02) !important;
+  box-shadow: 4px 6px 16px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+/* Push pin */
+.scrapbook-card::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  z-index: 5;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.scrapbook-card:nth-child(odd)::before { background: #e53935; }
+.scrapbook-card:nth-child(even)::before { background: #1565c0; }
+.scrapbook-card:nth-child(3n)::before { background: #2e7d32; }
+.scrapbook-card:nth-child(4n)::before { background: #f57c00; }
+
+/* Washi tape on scrapbook card */
+.scrapbook-card::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: -6px;
+  width: 50px;
+  height: 14px;
+  background: rgba(230,212,77,0.6);
+  transform: rotate(-5deg);
+  z-index: 4;
+}
+
+.scrapbook-card-photo {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  display: block;
+}
+
+.scrapbook-card-photo-placeholder {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: var(--bg-kraft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: var(--border-light);
+}
+
+.scrapbook-card-info {
+  padding: 8px 10px 10px;
+}
+
+.scrapbook-card-artist {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scrapbook-card-date {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.scrapbook-card-stars {
+  font-size: 12px;
+  color: var(--accent-gold);
+  margin-top: 3px;
+}
+
+.scrapbook-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.scrapbook-empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.scrapbook-empty-text {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+   Scrapbook Viewer (Dark)
+   ============================================================ */
+#screen-scrapbook-viewer {
+  background: #1a1a1a;
+  color: #f0f0f0;
+}
+
+.viewer-header {
+  height: var(--header-height);
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--screen-padding);
+  gap: 12px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+}
+
+.viewer-back-btn {
+  color: #f0f0f0;
+  font-size: 22px;
+  padding: 6px;
+}
+
+.viewer-artist-name {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  font-weight: 700;
+  color: #f0f0f0;
+  flex: 1;
+}
+
+.viewer-add-btn {
+  color: var(--accent-gold);
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  padding: 6px 12px;
+  border: 1px solid var(--accent-gold);
+  border-radius: 16px;
+}
+
+.viewer-media-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 0 var(--screen-padding);
+  gap: 0;
+  background: rgba(0,0,0,0.3);
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.viewer-media-tabs::-webkit-scrollbar { display: none; }
+
+.viewer-tab {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  padding: 10px 16px;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.viewer-tab.active {
+  color: var(--accent-gold);
+  border-bottom-color: var(--accent-gold);
+}
+
+.viewer-photos-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px var(--screen-padding);
+}
+
+.viewer-main-photo {
+  width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.viewer-photo-placeholder {
+  width: 100%;
+  height: 220px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 2px dashed rgba(255,255,255,0.15);
+  cursor: pointer;
+}
+
+.viewer-upload-label {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  color: var(--accent-gold);
+  cursor: pointer;
+  padding: 8px 18px;
+  border: 1px solid var(--accent-gold);
+  border-radius: 16px;
+}
+
+.viewer-dot-indicators {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.viewer-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transition: background 0.2s;
+}
+
+.viewer-dot.active {
+  background: var(--accent-gold);
+}
+
+.viewer-caption {
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  margin-top: 12px;
+  text-align: center;
+  font-style: italic;
+}
+
+.viewer-info {
+  padding: 16px var(--screen-padding);
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.viewer-date-venue {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 12px;
+}
+
+.viewer-star-rating {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.viewer-star {
+  font-size: 20px;
+  color: rgba(255,255,255,0.2);
+  transition: color 0.15s;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewer-star.filled {
+  color: var(--accent-gold);
+}
+
+.viewer-notes {
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.6;
+  min-height: 60px;
+  outline: none;
+}
+
+.viewer-notes[contenteditable="true"] {
+  border: 1px dashed rgba(255,255,255,0.2);
+}
+
+/* Photo grid (multiple photos) */
+.viewer-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.viewer-thumb {
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.viewer-thumb.active {
+  opacity: 1;
+  outline: 2px solid var(--accent-gold);
+}
+
+.viewer-upload-area {
+  display: none;
+}
+
+/* ============================================================
+   Stats Screen
+   ============================================================ */
+#screen-stats {
+  padding-bottom: 20px;
+}
+
+.stats-period-toggle {
+  display: flex;
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border-light);
+  overflow: hidden;
+}
+
+.period-btn {
+  flex: 1;
+  padding: 12px 6px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+  border-right: 1px solid var(--border-light);
+  transition: all 0.2s;
+}
+
+.period-btn:last-child {
+  border-right: none;
+}
+
+.period-btn.active {
+  background: var(--text-primary);
+  color: var(--bg-cream);
+}
+
+.stats-year-label {
+  font-family: 'Caveat', cursive;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding: 16px var(--screen-padding) 8px;
+  text-align: center;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 var(--screen-padding) 10px;
+}
+
+.stat-card {
+  background: var(--bg-white);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border-light);
+  padding: 16px 14px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.stat-number {
+  font-family: 'Caveat', cursive;
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Budget card */
+.stats-budget-card {
+  background: var(--bg-white);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border-light);
+  padding: 16px;
+  margin: 0 var(--screen-padding) 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.stats-card-title {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.budget-amounts {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.budget-spent {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.budget-progress-wrap {
+  height: 14px;
+  background: var(--bg-kraft);
+  border-radius: 7px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  border: 1px solid var(--border-light);
+}
+
+.budget-progress-bar {
+  height: 100%;
+  background: var(--accent-gold);
+  border-radius: 7px;
+  transition: width 0.5s ease;
+  min-width: 4px;
+}
+
+.budget-progress-bar.over-budget {
+  background: var(--dna-border);
+}
+
+.budget-remaining {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+/* Ranked list cards */
+.stats-ranked-card {
+  background: var(--bg-white);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border-light);
+  padding: 16px;
+  margin: 0 var(--screen-padding) 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.ranked-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bg-kraft);
+}
+
+.ranked-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ranked-num {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  width: 24px;
+  text-align: center;
+}
+
+.ranked-name {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.ranked-count {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: var(--bg-kraft);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* DNA/Wishlist summary cards */
+.stats-summary-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 var(--screen-padding) 20px;
+}
+
+.stats-small-card {
+  background: var(--bg-white);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border-light);
+  padding: 14px;
+  text-align: center;
+}
+
+.stats-small-card .stat-number {
+  font-size: 32px;
+}
+
+/* ============================================================
+   Settings Screen
+   ============================================================ */
+#screen-settings {
+  padding-bottom: 80px;
+}
+
+.settings-section {
+  padding: 12px var(--screen-padding) 0;
+}
+
+.settings-section-title {
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.settings-card {
+  background: var(--bg-white);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--bg-kraft);
+  gap: 10px;
+}
+
+.settings-row:last-child {
+  border-bottom: none;
+}
+
+.settings-row-label {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 17px;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.settings-row-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.settings-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 15px;
+  color: var(--text-primary);
+  text-align: right;
+  width: 160px;
+  padding: 0;
+}
+
+.settings-input::placeholder {
+  color: var(--border-light);
+}
+
+/* Toggle switch */
+.toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--border-light);
+  border-radius: 12px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background: var(--booked-border);
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(20px);
+}
+
+/* Quality toggle */
+.quality-toggle {
+  display: flex;
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.quality-btn {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 13px;
+  padding: 5px 12px;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.quality-btn.active {
+  background: var(--text-primary);
+  color: var(--bg-cream);
+}
+
+/* Ticket links grid */
+.ticket-links-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 10px 14px;
+}
+
+.ticket-link-btn {
+  padding: 10px 8px;
+  border-radius: 8px;
+  background: var(--bg-kraft);
+  border: 1px solid var(--border-light);
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 13px;
+  color: var(--text-primary);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.ticket-link-btn:active {
+  background: var(--border-light);
+}
+
+/* Data action buttons */
+.data-action-btn {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  color: var(--text-primary);
+  padding: 13px 14px;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--bg-kraft);
+  transition: background 0.15s;
+}
+
+.data-action-btn:last-child {
+  border-bottom: none;
+}
+
+.data-action-btn:active {
+  background: var(--bg-kraft);
+}
+
+.data-action-btn.danger {
+  color: var(--dna-text);
+}
+
+/* Coffee ring easter egg */
+.coffee-ring {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 8px solid rgba(101,67,33,0.08);
+  box-shadow:
+    inset 0 0 0 3px rgba(101,67,33,0.04),
+    0 0 0 2px rgba(101,67,33,0.03);
+  margin: 30px auto 10px;
+  position: relative;
+  opacity: 0.6;
+}
+
+.coffee-ring::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 4px solid rgba(101,67,33,0.05);
+}
+
+/* ============================================================
+   Toast Notifications
+   ============================================================ */
+.toast {
+  position: fixed;
+  bottom: calc(var(--nav-height) + 16px);
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(74,63,53,0.92);
+  color: var(--bg-cream);
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.25s, transform 0.25s;
+  z-index: 1000;
+  pointer-events: none;
+  max-width: 90vw;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ============================================================
+   Confirm Dialog
+   ============================================================ */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 400;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.confirm-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.confirm-sheet {
+  background: var(--bg-white);
+  border-radius: 16px 16px 0 0;
+  padding: 20px var(--screen-padding) 30px;
+  width: 100%;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.confirm-overlay.visible .confirm-sheet {
+  transform: translateY(0);
+}
+
+.confirm-title {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.confirm-message {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.confirm-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.confirm-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: 10px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 16px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.confirm-btn.cancel {
+  background: var(--bg-kraft);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+}
+
+.confirm-btn.confirm {
+  background: var(--text-primary);
+  color: var(--bg-cream);
+}
+
+.confirm-btn.danger {
+  background: var(--dna-text);
+  color: white;
+}
+
+/* ============================================================
+   Loading / Spinner
+   ============================================================ */
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border-light);
+  border-top-color: var(--text-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   Utilities
+   ============================================================ */
+.hidden { display: none !important; }
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+
+.full-width { width: 100%; }
+
+/* Scrollbar styling for desktop */
+@media (min-width: 640px) {
+  .screen::-webkit-scrollbar,
+  .modal-scroll::-webkit-scrollbar,
+  .gigs-list-scroll::-webkit-scrollbar {
+    width: 4px;
+  }
+  .screen::-webkit-scrollbar-track,
+  .modal-scroll::-webkit-scrollbar-track,
+  .gigs-list-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .screen::-webkit-scrollbar-thumb,
+  .modal-scroll::-webkit-scrollbar-thumb,
+  .gigs-list-scroll::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+    border-radius: 2px;
+  }
+}
+
+/* PWA safe areas */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  #bottom-nav {
+    padding-bottom: env(safe-area-inset-bottom);
+    height: calc(var(--nav-height) + env(safe-area-inset-bottom));
+  }
+}
+
+/* Desktop max-width centering */
+@media (min-width: 480px) {
+  #app {
+    max-width: 480px;
+    margin: 0 auto;
+    box-shadow: 0 0 40px rgba(0,0,0,0.2);
+  }
+}
+
+/* ============================================================
+   Attachments (Gig Dossier)
+   ============================================================ */
+.attachments-hint {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.attachments-empty {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  color: var(--border-light);
+  text-align: center;
+  padding: 12px 0;
+}
+
+.attachments-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.attach-item {
+  position: relative;
+  width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.attach-thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1.5px solid var(--border-light);
+}
+
+.attach-file-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-kraft);
+  border-radius: 6px;
+  border: 1.5px solid var(--border-light);
+  font-size: 32px;
+}
+
+.attach-name {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 80px;
+}
+
+.attach-remove-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--dna-text);
+  color: white;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  border: 2px solid white;
+}
+
+.attach-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--bg-kraft);
+  border: 1.5px dashed var(--border-light);
+  border-radius: 20px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  color: var(--text-primary);
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.attach-add-btn:active { opacity: 0.7; }
+
+.attach-preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.attach-preview-overlay img {
+  max-width: 95vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.attach-preview-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================
+   Scrapbook viewer - simplified attach button
+   ============================================================ */
+.viewer-attach-btn {
+  display: block;
+  width: calc(100% - 40px);
+  margin: 16px auto 0;
+  padding: 14px;
+  background: rgba(255,255,255,0.12);
+  border: 2px dashed rgba(255,255,255,0.3);
+  border-radius: 12px;
+  text-align: center;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 18px;
+  color: rgba(255,255,255,0.8);
+  cursor: pointer;
+}
+
+.viewer-attach-btn:active { opacity: 0.7; }
+
+/* ============================================================
+   Backup Banner
+   ============================================================ */
+.backup-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #fff3a8;
+  border-top: 2px solid #e6d44d;
+  flex-shrink: 0;
+  z-index: 50;
+}
+
+.backup-banner-text {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 14px;
+  color: #8a7a00;
+  flex: 1;
+}
+
+.backup-banner-btn {
+  padding: 6px 12px;
+  background: var(--text-primary);
+  color: var(--header-text);
+  border-radius: 14px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.backup-banner-dismiss {
+  color: #8a7a00;
+  font-size: 16px;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+/* Last backup info in Settings */
+.last-backup-info {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 6px 0 10px;
+}
+
+/* ============================================================
+   CHANGE 2: Festival / Multi-Act Mode
+   ============================================================ */
+.festival-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.festival-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-family: 'Patrick Hand', sans-serif;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 8px 14px 8px 52px;
+}
+
+.festival-lineup-note {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-style: italic;
+  padding: 6px 0 10px;
+}
+
+/* Lineup section in dossier */
+.lineup-section {
+  padding: 0;
+}
+
+.lineup-day-header {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 10px 0 6px;
+  border-bottom: 2px solid var(--bg-kraft);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.lineup-act-row {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--bg-kraft);
+  cursor: pointer;
+  transition: background 0.15s;
+  border-radius: 6px;
+}
+
+.lineup-act-row:last-child {
+  border-bottom: none;
+}
+
+.lineup-act-row:active {
+  background: var(--bg-kraft);
+}
+
+.lineup-act-status-icon {
+  font-size: 18px;
+  width: 28px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.lineup-act-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.lineup-act-name {
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Source Sans 3', sans-serif;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lineup-act-detail {
+  font-size: 14px;
+  font-family: 'Source Sans 3', sans-serif;
+  color: var(--text-secondary);
+}
+
+.lineup-act-stars {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.lineup-star {
+  font-size: 20px;
+  padding: 12px 4px;
+  color: var(--border-light);
+  background: none;
+  border: none;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lineup-star.filled {
+  color: var(--accent-gold);
+}
+
+.lineup-act-row.plan_to_see {
+  background: rgba(255,243,168,0.3);
+}
+
+.lineup-act-row.seen {
+  background: rgba(168,212,245,0.2);
+}
+
+.lineup-act-row.missed {
+  opacity: 0.5;
+}
+
+.act-status-dot {
+  display: inline-block;
+  font-size: 16px;
+}
+
+.act-status-dot.unmarked { color: var(--border-light); }
+.act-status-dot.plan { color: var(--wishlist-text); }
+.act-status-dot.seen { color: var(--booked-text); }
+.act-status-dot.missed { color: var(--dna-text); }
+
+/* Add act form */
+.add-act-form {
+  background: var(--bg-kraft);
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 10px;
+  border: 1px solid var(--border-light);
+}
+
+.add-act-form .dossier-row-value.editable {
+  background: white;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-light);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.add-act-form select {
+  background: white;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-light);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.add-act-save-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: var(--text-primary);
+  color: var(--header-text);
+  border-radius: 8px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 10px;
+  min-height: 44px;
+}
+
+.lineup-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: var(--bg-kraft);
+  border: 1.5px dashed var(--border-light);
+  border-radius: 20px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 16px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin-top: 8px;
+  min-height: 44px;
+}
+
+/* Festival date range display */
+.festival-date-range {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Calendar festival band */
+.cal-cell.festival-band {
+  position: relative;
+}
+
+.cal-cell.festival-band::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 0;
+  right: 0;
+  background: var(--festival-band-color, rgba(178,230,178,0.3));
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 4px;
+}
+
+.cal-cell.festival-band .cal-date {
+  position: relative;
+  z-index: 1;
+}
+
+.cal-cell.festival-band .cal-clash {
+  position: relative;
+  z-index: 1;
+}
+
+/* Bulk-attend modal */
+.bulk-attend-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 250;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bulk-attend-sheet {
+  background: var(--bg-white);
+  border-radius: 16px 16px 0 0;
+  padding: 20px var(--screen-padding) 30px;
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.bulk-attend-title {
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.bulk-attend-subtitle {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.bulk-attend-list {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bulk-attend-act {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--bg-kraft);
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.bulk-attend-act:last-child {
+  border-bottom: none;
+}
+
+.bulk-attend-check {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.bulk-attend-act.selected .bulk-attend-check {
+  background: var(--booked-border);
+  border-color: var(--booked-border);
+  color: white;
+}
+
+.bulk-attend-act-info {
+  flex: 1;
+}
+
+.bulk-attend-act-name {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.bulk-attend-act-detail {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.bulk-attend-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.bulk-attend-done-btn {
+  flex: 1;
+  padding: 14px;
+  background: var(--booked-bg);
+  color: var(--booked-text);
+  border: 2px solid var(--booked-border);
+  border-radius: 10px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  min-height: 44px;
+}
+
+.bulk-attend-later-btn {
+  flex: 1;
+  padding: 14px;
+  background: var(--bg-kraft);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 16px;
+  text-align: center;
+  min-height: 44px;
+}
+
+/* ============================================================
+   CHANGE 3: Festival Import Preview
+   ============================================================ */
+.import-preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.import-preview-card {
+  background: var(--bg-white);
+  border-radius: 16px;
+  padding: 28px 24px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+}
+
+.import-preview-title {
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.import-preview-icon {
+  font-size: 48px;
+  margin: 12px 0;
+}
+
+.import-preview-name {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Source Sans 3', sans-serif;
+  color: var(--text-primary);
+}
+
+.import-preview-dates,
+.import-preview-venue,
+.import-preview-acts {
+  font-size: 15px;
+  font-family: 'Source Sans 3', sans-serif;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.import-preview-breakdown {
+  text-align: left;
+  background: var(--bg-kraft);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 14px 0;
+  font-size: 14px;
+  font-family: 'Source Sans 3', sans-serif;
+  color: var(--text-secondary);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.import-confirm-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--booked-bg);
+  color: var(--booked-text);
+  border: 2px solid var(--booked-border);
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Source Sans 3', sans-serif;
+  margin-top: 8px;
+  min-height: 44px;
+}
+
+.import-cancel-btn {
+  width: 100%;
+  padding: 10px;
+  background: none;
+  color: var(--text-secondary);
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  margin-top: 8px;
+  min-height: 44px;
+}
+
+/* ============================================================
+   CHANGE 4: Cache Recovery Banner
+   ============================================================ */
+.cache-recovery-banner {
+  background: var(--booked-bg);
+  border: 2px solid var(--booked-border);
+  border-radius: 8px;
+  padding: 14px;
+  margin: 10px 15px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  color: var(--booked-text);
+}
+
+.cache-recovery-banner-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.cache-recovery-restore-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--booked-border);
+  color: white;
+  border-radius: 16px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  margin-top: 10px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+/* ============================================================
+   CHANGE 5: Welcome Modal
+   ============================================================ */
+.welcome-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(74,63,53,0.85);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.welcome-card {
+  background: var(--bg-white);
+  border-radius: 16px;
+  padding: 28px 24px;
+  max-width: 360px;
+  width: 100%;
+}
+
+.welcome-title {
+  font-family: 'Caveat', cursive;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.welcome-body p {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.welcome-point {
+  padding: 6px 0;
+  font-size: 15px;
+  font-family: 'Source Sans 3', sans-serif;
+  line-height: 1.5;
+}
+
+.welcome-point.positive {
+  color: var(--booked-text);
+}
+
+.welcome-point.warning {
+  color: var(--dna-text);
+  font-weight: 600;
+}
+
+.welcome-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--text-primary);
+  color: var(--header-text);
+  border-radius: 24px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 20px;
+  min-height: 44px;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+}
+
+/* ============================================================
+   CHANGE 6: Smart Backup Reminder Updates
+   ============================================================ */
+.backup-banner.urgent {
+  background: var(--dna-bg);
+  border-top-color: var(--dna-border);
+}
+
+.backup-banner.urgent .backup-banner-text {
+  color: var(--dna-text);
+}
+
+/* ============================================================
+   CHANGE 7: Google Drive Section
+   ============================================================ */
+.gdrive-section {
+  padding: 4px 0;
+}
+
+.gdrive-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--bg-kraft);
+}
+
+.gdrive-status:last-child {
+  border-bottom: none;
+}
+
+.gdrive-status.connected .gdrive-icon {
+  color: var(--booked-text);
+}
+
+.gdrive-status.disconnected .gdrive-icon {
+  color: var(--text-secondary);
+}
+
+.gdrive-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  width: 28px;
+  text-align: center;
+}
+
+.gdrive-text {
+  flex: 1;
+}
+
+.gdrive-title {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.gdrive-subtitle {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.gdrive-connect-btn {
+  padding: 8px 16px;
+  background: var(--booked-bg);
+  color: var(--booked-text);
+  border: 1.5px solid var(--booked-border);
+  border-radius: 16px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 44px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.gdrive-disconnect-btn {
+  padding: 8px 16px;
+  background: var(--bg-kraft);
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border-light);
+  border-radius: 16px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 14px;
+  min-height: 44px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.gdrive-settings {
+  padding: 0 14px;
+}
+
+/* ============================================================
+   CHANGE 8: Scrapbook Viewer Tabs
+   ============================================================ */
+.viewer-category-picker {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 300;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.viewer-category-sheet {
+  background: #2a2a2a;
+  border-radius: 16px 16px 0 0;
+  padding: 20px var(--screen-padding) 34px;
+  width: 100%;
+}
+
+.viewer-category-title {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.viewer-category-options {
+  display: flex;
+  gap: 10px;
+}
+
+.viewer-category-option {
+  flex: 1;
+  padding: 14px 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.viewer-category-option:active {
+  background: rgba(255,255,255,0.2);
+}
+
+.viewer-empty-tab {
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(255,255,255,0.4);
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 16px;
+}
+
+/* ============================================================
+   CHANGE 9: Miles / Postcode
+   ============================================================ */
+.postcode-status {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.postcode-status.ok { color: var(--booked-text); }
+.postcode-status.error { color: var(--dna-text); }
+
+.miles-note {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-style: italic;
+  text-align: center;
+  margin-top: 4px;
+}
+
+/* ============================================================
+   CHANGE 10: Updated Settings Your Data section
+   ============================================================ */
+.data-warning-bar {
+  background: #fff3a8;
+  border: 1px solid var(--wishlist-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  color: var(--wishlist-text);
+  margin: 10px 14px 4px;
+}
+
+.storage-used-info {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 2px 14px 8px;
+}
+
+.data-action-btn.primary {
+  background: var(--text-primary) !important;
+  color: var(--header-text) !important;
+  font-family: 'Source Sans 3', sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  min-height: 52px;
+  border-radius: 8px;
+  justify-content: center;
+  margin: 8px 14px;
+  width: calc(100% - 28px);
+  border: none;
+}
+
+/* Backup type choice dialog */
+.backup-type-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 400;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.backup-type-sheet {
+  background: var(--bg-white);
+  border-radius: 16px 16px 0 0;
+  padding: 20px var(--screen-padding) 30px;
+  width: 100%;
+}
+
+.backup-type-title {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+}
+
+.backup-type-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.backup-type-btn {
+  flex: 1;
+  padding: 14px 10px;
+  border-radius: 10px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  text-align: center;
+  cursor: pointer;
+  border: 1.5px solid var(--border-light);
+  background: var(--bg-kraft);
+  color: var(--text-primary);
+  min-height: 44px;
+  transition: background 0.2s;
+}
+
+.backup-type-btn:active {
+  background: var(--border-light);
+}
+
+/* Venue postcode field */
+.venue-postcode-status {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.venue-postcode-status.ok { color: var(--booked-text); }
+.venue-postcode-status.error { color: var(--dna-text); }
