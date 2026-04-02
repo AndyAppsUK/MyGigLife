@@ -53,6 +53,7 @@
   /* Layout */
   --header-height: 56px;
   --nav-height: 72px;
+  --support-banner-height: 36px;
   --screen-padding: 15px;
   --card-radius: 8px;
 }
@@ -221,7 +222,7 @@ a {
   flex: 1;
   overflow: hidden;
   position: relative;
-  padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom, 0));
+  padding-bottom: calc(var(--nav-height) + var(--support-banner-height) + env(safe-area-inset-bottom, 0));
 }
 
 /* ============================================================
@@ -237,8 +238,8 @@ a {
   pointer-events: none;
   transition: opacity 0.25s ease;
   -webkit-overflow-scrolling: touch;
-  /* Ensure content scrolls clear of the fixed nav bar */
-  padding-bottom: calc(var(--nav-height) + 16px);
+  /* Ensure content scrolls clear of the fixed nav bar and support banner */
+  padding-bottom: calc(var(--nav-height) + var(--support-banner-height) + 16px);
 }
 
 .screen.active {
@@ -342,6 +343,37 @@ a {
 .nav-item.active .nav-label {
   color: var(--text-primary);
   font-weight: 600;
+}
+
+/* ============================================================
+   Support Banner
+   ============================================================ */
+#support-banner {
+  position: fixed;
+  bottom: calc(var(--nav-height) + env(safe-area-inset-bottom, 0));
+  left: 0;
+  right: 0;
+  height: var(--support-banner-height);
+  background: var(--header-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 98;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  transition: background 0.2s;
+}
+
+#support-banner:hover,
+#support-banner:active {
+  background: #5c4f43;
+}
+
+.support-banner-text {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.3px;
 }
 
 /* Add Gig button (center, elevated) */

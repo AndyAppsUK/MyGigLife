@@ -1960,6 +1960,13 @@ function openAddResourceSheet(gig, preselectedType = null) {
         if (defaults[key]) el.textContent = defaults[key];
       }
     });
+    // Update ticket-details placeholder based on type
+    const tdEl = sheet.querySelector('#ares-ticket-details');
+    if (tdEl) {
+      tdEl.placeholder = type === 'other'
+        ? 'Description of this resource'
+        : 'Enter a brief description of the ticket — not for gig tickets!';
+    }
   }
 
   // Apply initial field visibility
@@ -2440,6 +2447,66 @@ function renderStats() {
 // ============================================================
 // Settings Screen
 // ============================================================
+// Support Screen
+// ============================================================
+function openSupportScreen() {
+  renderSupportScreen();
+  document.getElementById('screen-support').classList.add('active');
+  document.getElementById('screen-support').querySelector('.sub-screen-content').scrollTop = 0;
+}
+
+function closeSupportScreen() {
+  document.getElementById('screen-support').classList.remove('active');
+}
+
+function renderSupportScreen() {
+  const container = document.getElementById('support-content');
+  if (!container) return;
+  container.innerHTML = `
+    <div class="settings-container" style="padding-bottom:32px">
+
+      <!-- Support MyGigLife -->
+      <div class="settings-section">
+        <div class="settings-section-title">Support MyGigLife</div>
+        <div class="settings-card">
+          <p class="tip-jar-message">MyGigLife is free and always will be. If it's made your gig life easier, you can say thanks here!</p>
+          <div class="tip-jar-grid">
+            <a href="${AFFILIATE.kofi}?amount=3" target="_blank" class="tip-jar-btn">
+              <span class="tip-jar-icon">🍺</span>
+              <span class="tip-jar-label">Buy me a pint</span>
+              <span class="tip-jar-amount">£3</span>
+            </a>
+            <a href="${AFFILIATE.kofi}?amount=10" target="_blank" class="tip-jar-btn">
+              <span class="tip-jar-icon">🎫</span>
+              <span class="tip-jar-label">Buy me a ticket</span>
+              <span class="tip-jar-amount">£10</span>
+            </a>
+            <a href="${AFFILIATE.kofi}?amount=50" target="_blank" class="tip-jar-btn">
+              <span class="tip-jar-icon">🎪</span>
+              <span class="tip-jar-label">Buy me a festival pass</span>
+              <span class="tip-jar-amount">£50</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div class="settings-section">
+        <div class="settings-section-title">About</div>
+        <div class="settings-card">
+          <p class="about-made-by">Made with 🎸 by <a href="https://andyapps.uk" target="_blank" class="about-link">Andy at andyapps.uk</a></p>
+          <p class="about-disclosure">MyGigLife is free to use. Some links to ticket platforms and hotel booking sites are affiliate links, which means we earn a small commission if you make a purchase — at no extra cost to you. This helps keep the app free and supports future development.</p>
+        </div>
+      </div>
+
+      <div class="coffee-ring" style="margin-top:16px"></div>
+    </div>
+  `;
+
+  document.getElementById('support-back-btn').addEventListener('click', closeSupportScreen);
+}
+
+// ============================================================
 function renderSettings() {
   const container = document.getElementById('settings-container');
   if (!container) return;
@@ -2550,40 +2617,6 @@ function renderSettings() {
         </label>
         <input type="file" id="restore-input" accept=".json,application/json" style="display:none">
         <button class="data-action-btn danger" id="btn-clear-data">🗑 Clear All Data</button>
-      </div>
-    </div>
-
-    <!-- Support MyGigLife -->
-    <div class="settings-section">
-      <div class="settings-section-title">Support MyGigLife</div>
-      <div class="settings-card">
-        <p class="tip-jar-message">MyGigLife is free and always will be. If it's made your gig life easier, you can say thanks here!</p>
-        <div class="tip-jar-grid">
-          <a href="${AFFILIATE.kofi}?amount=3" target="_blank" class="tip-jar-btn">
-            <span class="tip-jar-icon">🍺</span>
-            <span class="tip-jar-label">Buy me a pint</span>
-            <span class="tip-jar-amount">£3</span>
-          </a>
-          <a href="${AFFILIATE.kofi}?amount=10" target="_blank" class="tip-jar-btn">
-            <span class="tip-jar-icon">🎫</span>
-            <span class="tip-jar-label">Buy me a ticket</span>
-            <span class="tip-jar-amount">£10</span>
-          </a>
-          <a href="${AFFILIATE.kofi}?amount=50" target="_blank" class="tip-jar-btn">
-            <span class="tip-jar-icon">🎪</span>
-            <span class="tip-jar-label">Buy me a festival pass</span>
-            <span class="tip-jar-amount">£50</span>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- About -->
-    <div class="settings-section">
-      <div class="settings-section-title">About</div>
-      <div class="settings-card">
-        <p class="about-made-by">Made with 🎸 by <a href="https://andyapps.uk" target="_blank" class="about-link">Andy at andyapps.uk</a></p>
-        <p class="about-disclosure">MyGigLife is free to use. Some links to ticket platforms and hotel booking sites are affiliate links, which means we earn a small commission if you make a purchase — at no extra cost to you. This helps keep the app free and supports future development.</p>
       </div>
     </div>
 
@@ -3273,6 +3306,11 @@ function buildAppShell() {
       </div>
     </div>
 
+    <!-- Support Banner -->
+    <div id="support-banner" role="button" tabindex="0" aria-label="Support MyGigLife">
+      <span class="support-banner-text">❤️ Support MyGigLife</span>
+    </div>
+
     <!-- Gig Dossier Sub-screen -->
     <div class="sub-screen" id="screen-dossier">
       <div style="height:var(--header-height);background:var(--header-bg);color:var(--header-text);display:flex;align-items:center;padding:0 15px;gap:8px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.2)">
@@ -3290,6 +3328,15 @@ function buildAppShell() {
         <span class="viewer-artist-name" id="viewer-artist-name"></span>
       </div>
       <div class="sub-screen-content" id="scrapbook-viewer-body"></div>
+    </div>
+
+    <!-- Support Sub-screen -->
+    <div class="sub-screen" id="screen-support">
+      <div style="height:var(--header-height);background:var(--header-bg);color:var(--header-text);display:flex;align-items:center;padding:0 15px;gap:8px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.2)">
+        <button class="sub-header-back" id="support-back-btn">‹</button>
+        <span class="sub-header-title">Support MyGigLife</span>
+      </div>
+      <div class="sub-screen-content" id="support-content"></div>
     </div>
   `;
 }
@@ -3383,6 +3430,11 @@ function attachGlobalListeners() {
       btn.textContent = isExpanded ? '− Less details' : '＋ Add more details';
       return;
     }
+  });
+
+  // Support banner
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#support-banner')) openSupportScreen();
   });
 
   // Festival toggle in Add Gig form
