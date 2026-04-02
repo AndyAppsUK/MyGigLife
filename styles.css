@@ -75,7 +75,7 @@ html, body {
 
 body {
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 16px;
+  font-size: 17px;
   background: var(--bg-cream);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
@@ -204,7 +204,7 @@ a {
 
 .sub-header-action {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--accent-gold);
   padding: 6px 10px;
   border-radius: 6px;
@@ -334,7 +334,7 @@ a {
 
 .nav-label {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 400;
   color: var(--text-secondary);
   transition: color 0.2s;
@@ -371,7 +371,7 @@ a {
 
 .support-banner-text {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   color: rgba(255,255,255,0.85);
   letter-spacing: 0.3px;
 }
@@ -381,7 +381,7 @@ a {
    ============================================================ */
 .header-help-btn {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   color: rgba(255,255,255,0.9);
   background: rgba(255,255,255,0.15);
   border: 1px solid rgba(255,255,255,0.25);
@@ -406,7 +406,7 @@ a {
 
 .help-intro {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-secondary);
   margin: 0 0 12px;
 }
@@ -451,7 +451,7 @@ a {
   display: none;
   padding: 0 14px 14px 42px;
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
   color: var(--text-secondary);
 }
@@ -537,7 +537,7 @@ a {
 
 .welcome-point strong {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-primary);
   display: block;
   margin-bottom: 3px;
@@ -545,7 +545,7 @@ a {
 
 .welcome-point p {
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   color: var(--text-secondary);
   line-height: 1.5;
   margin: 0;
@@ -747,7 +747,7 @@ a {
 
 .legend-label {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 12px;
+  font-size: 16px;
   color: var(--text-secondary);
 }
 
@@ -769,7 +769,7 @@ a {
   color: var(--text-secondary);
   text-align: center;
   padding: 20px;
-  font-size: 15px;
+  font-size: 17px;
 }
 
 /* Mini gig card */
@@ -829,7 +829,7 @@ a {
 
 .mini-card-countdown {
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--booked-text);
   background: var(--booked-bg);
@@ -1024,7 +1024,7 @@ a {
 }
 
 .gig-card-times {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-secondary);
   margin-top: 2px;
 }
@@ -1039,7 +1039,7 @@ a {
 
 .status-badge {
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   padding: 3px 10px;
   border-radius: 10px;
@@ -1052,7 +1052,7 @@ a {
 
 .countdown-pill {
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 10px;
@@ -1063,7 +1063,7 @@ a {
 
 .star-rating-display {
   color: var(--accent-gold);
-  font-size: 14px;
+  font-size: 16px;
   letter-spacing: 1px;
 }
 
@@ -1094,7 +1094,7 @@ a {
 }
 
 .gigs-empty-sub {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-secondary);
 }
 
@@ -1402,7 +1402,7 @@ a {
 .washi-tape-label {
   display: inline-block;
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 12px;
+  font-size: 16px;
   padding: 4px 16px;
   transform: rotate(-2deg);
   margin-bottom: 12px;
@@ -1425,7 +1425,7 @@ a {
 .dossier-countdown {
   display: inline-block;
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   padding: 4px 12px;
   border-radius: 14px;
   background: var(--booked-bg);
@@ -1505,7 +1505,7 @@ a {
 
 .dossier-row-label {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-secondary);
   min-width: 90px;
   padding-top: 1px;
@@ -1567,7 +1567,7 @@ a {
   text-align: center;
   font-family: 'Patrick Hand', sans-serif;
   font-style: italic;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--dna-text);
   padding: 12px;
   cursor: pointer;
@@ -1583,7 +1583,7 @@ a {
 
 .venue-action-btn {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   padding: 6px 12px;
   border-radius: 16px;
   border: 1px solid var(--accent-blue);
@@ -1600,7 +1600,7 @@ a {
 /* Add to cal button */
 .add-to-cal-btn {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   padding: 8px 16px;
   border-radius: 16px;
   border: 1px solid var(--border-light);
@@ -1648,7 +1648,7 @@ a {
   padding: 14px;
   box-shadow: 2px 2px 6px rgba(0,0,0,0.08);
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-primary);
   min-height: 80px;
   line-height: 1.6;
@@ -1695,7 +1695,7 @@ a {
 
 .scrapbook-intro {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-secondary);
   text-align: center;
   padding: 8px 0;
@@ -1786,7 +1786,7 @@ a {
 
 .scrapbook-card-artist {
   font-weight: 700;
-  font-size: 13px;
+  font-size: 17px;
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
@@ -1800,7 +1800,7 @@ a {
 }
 
 .scrapbook-card-stars {
-  font-size: 12px;
+  font-size: 16px;
   color: var(--accent-gold);
   margin-top: 3px;
 }
@@ -1861,7 +1861,7 @@ a {
 .viewer-add-btn {
   color: var(--accent-gold);
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   padding: 6px 12px;
   border: 1px solid var(--accent-gold);
   border-radius: 16px;
@@ -1882,7 +1882,7 @@ a {
 
 .viewer-tab {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   color: rgba(255,255,255,0.5);
   padding: 10px 16px;
   border-bottom: 2px solid transparent;
@@ -1932,7 +1932,7 @@ a {
 
 .viewer-upload-label {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--accent-gold);
   cursor: pointer;
   padding: 8px 18px;
@@ -1991,13 +1991,13 @@ a {
   background: rgba(0,0,0,0.5);
   color: #fff;
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   padding: 2px 8px;
   border-radius: 10px;
 }
 
 .viewer-caption {
-  font-size: 14px;
+  font-size: 16px;
   color: rgba(255,255,255,0.7);
   margin-top: 12px;
   text-align: center;
@@ -2011,7 +2011,7 @@ a {
 
 .viewer-date-venue {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   color: rgba(255,255,255,0.6);
   margin-bottom: 12px;
 }
@@ -2042,7 +2042,7 @@ a {
   background: rgba(255,255,255,0.05);
   border-radius: 8px;
   padding: 12px;
-  font-size: 14px;
+  font-size: 16px;
   color: rgba(255,255,255,0.7);
   line-height: 1.6;
   min-height: 60px;
@@ -2098,7 +2098,7 @@ a {
   flex: 1;
   padding: 12px 6px;
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-secondary);
   text-align: center;
   border-right: 1px solid var(--border-light);
@@ -2149,7 +2149,7 @@ a {
 
 .stat-label {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   color: var(--text-secondary);
   margin-top: 4px;
 }
@@ -2166,7 +2166,7 @@ a {
 
 .stats-card-title {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 12px;
@@ -2175,7 +2175,7 @@ a {
 .budget-amounts {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 17px;
   color: var(--text-secondary);
   margin-bottom: 8px;
 }
@@ -2208,7 +2208,7 @@ a {
 
 .budget-remaining {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   color: var(--text-secondary);
   text-align: right;
 }
@@ -2247,13 +2247,13 @@ a {
 
 .ranked-name {
   flex: 1;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-primary);
 }
 
 .ranked-count {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   color: var(--text-secondary);
   background: var(--bg-kraft);
   padding: 2px 8px;
@@ -2329,7 +2329,7 @@ a {
 }
 
 .settings-row-sub {
-  font-size: 12px;
+  font-size: 16px;
   color: var(--text-secondary);
 }
 
@@ -2338,7 +2338,7 @@ a {
   border: none;
   outline: none;
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-primary);
   text-align: right;
   width: 160px;
@@ -2404,7 +2404,7 @@ a {
 
 .quality-btn {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   padding: 5px 12px;
   color: var(--text-secondary);
   transition: all 0.2s;
@@ -2429,7 +2429,7 @@ a {
   background: var(--bg-kraft);
   border: 1px solid var(--border-light);
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   color: var(--text-primary);
   text-align: center;
   display: flex;
@@ -2447,7 +2447,7 @@ a {
 /* Data action buttons */
 .data-action-btn {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-primary);
   padding: 13px 14px;
   width: 100%;
@@ -2510,7 +2510,7 @@ a {
   padding: 10px 20px;
   border-radius: 20px;
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 500;
   white-space: nowrap;
   opacity: 0;
@@ -2570,7 +2570,7 @@ a {
 }
 
 .confirm-message {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-secondary);
   margin-bottom: 20px;
   line-height: 1.5;
@@ -2686,7 +2686,7 @@ a {
    ============================================================ */
 .attachments-hint {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-secondary);
   margin-bottom: 12px;
   line-height: 1.4;
@@ -2694,7 +2694,7 @@ a {
 
 .attachments-empty {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--border-light);
   text-align: center;
   padding: 12px 0;
@@ -2774,7 +2774,7 @@ a {
   border: 1.5px dashed var(--border-light);
   border-radius: 20px;
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-primary);
   cursor: pointer;
   margin-top: 4px;
@@ -2820,7 +2820,7 @@ a {
 /* Empty state */
 .resources-empty {
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-secondary);
   font-style: italic;
   padding: 10px 0 6px;
@@ -2870,13 +2870,13 @@ a {
 
 .resource-type-badge {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   color: var(--text-secondary);
 }
 
 .resource-attach-count {
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   color: var(--text-secondary);
   white-space: nowrap;
   flex-shrink: 0;
@@ -2920,7 +2920,7 @@ a {
 
 .resource-notes {
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-primary);
   line-height: 1.6;
   padding: 10px 0 8px;
@@ -3005,7 +3005,7 @@ a {
 
 .resource-attach-btn {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--accent-blue);
   border: 1.5px solid var(--accent-blue);
   border-radius: 20px;
@@ -3188,7 +3188,7 @@ a {
 .ares-attach-label {
   flex: 1;
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   background: var(--bg-white);
   border: 1px solid var(--border-light);
   border-radius: 6px;
@@ -3305,7 +3305,7 @@ a {
 
 .backup-banner-text {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   color: #8a7a00;
   flex: 1;
 }
@@ -3316,7 +3316,7 @@ a {
   color: var(--header-text);
   border-radius: 14px;
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   white-space: nowrap;
 }
 
@@ -3330,7 +3330,7 @@ a {
 /* Last backup info in Settings */
 .last-backup-info {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-secondary);
   padding: 6px 0 10px;
 }
@@ -3357,7 +3357,7 @@ a {
 }
 
 .festival-lineup-note {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-secondary);
   font-style: italic;
   padding: 6px 0 10px;
@@ -3370,7 +3370,7 @@ a {
 
 .lineup-day-header {
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--text-secondary);
   padding: 10px 0 6px;
@@ -3423,7 +3423,7 @@ a {
 }
 
 .lineup-act-detail {
-  font-size: 14px;
+  font-size: 16px;
   font-family: 'Source Sans 3', sans-serif;
   color: var(--text-secondary);
 }
@@ -3608,7 +3608,7 @@ a {
 
 .bulk-attend-subtitle {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-secondary);
   margin-bottom: 16px;
 }
@@ -3664,7 +3664,7 @@ a {
 
 .bulk-attend-act-detail {
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-secondary);
 }
 
@@ -3746,7 +3746,7 @@ a {
 .import-preview-dates,
 .import-preview-venue,
 .import-preview-acts {
-  font-size: 15px;
+  font-size: 17px;
   font-family: 'Source Sans 3', sans-serif;
   color: var(--text-secondary);
   margin-top: 4px;
@@ -3758,7 +3758,7 @@ a {
   border-radius: 8px;
   padding: 12px;
   margin: 14px 0;
-  font-size: 14px;
+  font-size: 16px;
   font-family: 'Source Sans 3', sans-serif;
   color: var(--text-secondary);
   max-height: 200px;
@@ -3785,7 +3785,7 @@ a {
   background: none;
   color: var(--text-secondary);
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   margin-top: 8px;
   min-height: 44px;
 }
@@ -3800,7 +3800,7 @@ a {
   padding: 14px;
   margin: 10px 15px;
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--booked-text);
 }
 
@@ -3817,7 +3817,7 @@ a {
   color: white;
   border-radius: 16px;
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   margin-top: 10px;
   min-height: 44px;
   cursor: pointer;
@@ -3855,7 +3855,7 @@ a {
 
 .welcome-body p {
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-secondary);
   margin-bottom: 10px;
   line-height: 1.5;
@@ -3863,7 +3863,7 @@ a {
 
 .welcome-point {
   padding: 6px 0;
-  font-size: 15px;
+  font-size: 17px;
   font-family: 'Source Sans 3', sans-serif;
   line-height: 1.5;
 }
@@ -3952,7 +3952,7 @@ a {
 
 .gdrive-subtitle {
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-secondary);
 }
 
@@ -3963,7 +3963,7 @@ a {
   border: 1.5px solid var(--booked-border);
   border-radius: 16px;
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   min-height: 44px;
   cursor: pointer;
@@ -3977,7 +3977,7 @@ a {
   border: 1.5px solid var(--border-light);
   border-radius: 16px;
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   min-height: 44px;
   cursor: pointer;
   flex-shrink: 0;
@@ -4009,7 +4009,7 @@ a {
 
 .viewer-category-title {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: rgba(255,255,255,0.6);
   margin-bottom: 14px;
   text-align: center;
@@ -4055,7 +4055,7 @@ a {
    ============================================================ */
 .postcode-status {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   margin-top: 4px;
 }
 
@@ -4064,7 +4064,7 @@ a {
 
 .miles-note {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   color: var(--text-secondary);
   font-style: italic;
   text-align: center;
@@ -4080,14 +4080,14 @@ a {
   border-radius: 8px;
   padding: 10px 12px;
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--wishlist-text);
   margin: 10px 14px 4px;
 }
 
 .storage-used-info {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   color: var(--text-secondary);
   padding: 2px 14px 8px;
 }
@@ -4142,7 +4142,7 @@ a {
   padding: 14px 10px;
   border-radius: 10px;
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   text-align: center;
   cursor: pointer;
   border: 1.5px solid var(--border-light);
@@ -4159,7 +4159,7 @@ a {
 /* Venue postcode field */
 .venue-postcode-status {
   font-family: 'Patrick Hand', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   margin-top: 2px;
 }
 
@@ -4171,7 +4171,7 @@ a {
    ============================================================ */
 .tip-jar-message {
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-secondary);
   font-style: italic;
   margin-bottom: 14px;
@@ -4241,7 +4241,7 @@ a {
 
 .about-disclosure {
   font-family: 'Source Sans 3', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-secondary);
   line-height: 1.6;
   border-top: 1px dashed var(--border-light);
