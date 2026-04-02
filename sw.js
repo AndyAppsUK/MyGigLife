@@ -1,4 +1,4 @@
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.9';
 const CACHE_NAME = `mygiglife-v${APP_VERSION}`;
 
 const CORE_ASSETS = [
@@ -12,7 +12,12 @@ const CORE_ASSETS = [
   '/icon-512.png',
   '/apple-touch-icon.png',
   '/favicon.ico',
-  '/favicon-32x32.png'
+  '/favicon-32x32.png',
+  '/nav-calendar.png',
+  '/nav-mygigs.png',
+  '/nav-add.png',
+  '/nav-scrapbook.png',
+  '/nav-stats.png'
 ];
 
 // Install: cache core assets

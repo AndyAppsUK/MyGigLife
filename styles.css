@@ -221,6 +221,7 @@ a {
   flex: 1;
   overflow: hidden;
   position: relative;
+  padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom, 0));
 }
 
 /* ============================================================
@@ -270,13 +271,16 @@ a {
    Bottom Navigation
    ============================================================ */
 #bottom-nav {
-  height: var(--nav-height);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--nav-height) + env(safe-area-inset-bottom, 0));
   background: var(--bg-white);
   border-top: 1.5px solid var(--border-light);
   display: flex;
   align-items: center;
   justify-content: space-around;
-  flex-shrink: 0;
   z-index: 100;
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
