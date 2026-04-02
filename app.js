@@ -2616,7 +2616,7 @@ function renderHelpScreen() {
     const shareData = {
       title: 'MyGigLife',
       text: '🎸 Check out MyGigLife — a free app for tracking all your gigs, tickets, and memories!',
-      url: 'https://mygiglife.netlify.app'
+      url: 'https://mygiglife.uk'
     };
     if (navigator.share) {
       navigator.share(shareData).catch(() => {});
