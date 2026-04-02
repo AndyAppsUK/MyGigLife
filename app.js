@@ -9,13 +9,14 @@
 // Resource Types
 // ============================================================
 const RESOURCE_TYPES = [
-  { key: 'eticket',    label: 'E-Ticket',       icon: '🎫' },
-  { key: 'hotel',      label: 'Hotel',           icon: '🏨' },
-  { key: 'train',      label: 'Train / Coach',   icon: '🚂' },
-  { key: 'flight',     label: 'Flight',          icon: '✈️' },
-  { key: 'parking',    label: 'Car Park',        icon: '🚗' },
-  { key: 'restaurant', label: 'Restaurant',      icon: '🍽' },
-  { key: 'other',      label: 'Other',           icon: '📄' },
+  { key: 'gigticket',  label: 'Gig Ticket',      icon: '🎟' },
+  { key: 'eticket',    label: 'E-Ticket',        icon: '🎫' },
+  { key: 'hotel',      label: 'Hotel',            icon: '🏨' },
+  { key: 'train',      label: 'Train / Coach',    icon: '🚂' },
+  { key: 'flight',     label: 'Flight',           icon: '✈️' },
+  { key: 'parking',    label: 'Car Park',         icon: '🚗' },
+  { key: 'restaurant', label: 'Restaurant',       icon: '🍽' },
+  { key: 'other',      label: 'Other',            icon: '📄' },
 ];
 
 function getResourceType(key) {
@@ -726,6 +727,21 @@ async function saveAddGigForm() {
     if (App.currentScreen === 'calendar') renderCalendar();
     if (App.currentScreen === 'gigs') renderGigsList();
     if (App.currentScreen === 'stats') renderStats();
+
+    // If saved as booked or attended and no gig ticket resource exists, open dossier
+    // then prompt to add ticket details via the resource sheet
+    if (status === 'booked' || status === 'attended') {
+      const hasTicket = (gig.resources || []).some(r => r.type === 'gigticket' || r.type === 'eticket');
+      if (!hasTicket) {
+        setTimeout(async () => {
+          await openDossier(gig.id);
+          setTimeout(() => {
+            const freshGig = App.allGigs.find(g => g.id === gig.id);
+            if (freshGig) openAddResourceSheet(freshGig, 'gigticket');
+          }, 300);
+        }, 400);
+      }
+    }
   } catch (e) {
     console.error('Save error:', e);
     showToast('Failed to save gig. Please try again.');
@@ -872,6 +888,7 @@ function renderResourceCard(resource) {
       <span class="resource-chevron">›</span>
     </div>
     <div class="resource-card-body">
+      ${resource.ticketDetails ? `<div class="dossier-row"><span class="dossier-row-label">Details</span><span class="dossier-row-value">${escHtml(resource.ticketDetails)}</span></div>` : ''}
       ${resource.bookingRef ? `<div class="dossier-row"><span class="dossier-row-label">Booking Ref</span><span class="dossier-row-value">${escHtml(resource.bookingRef)}</span></div>` : ''}
       ${resource.flightNo ? `<div class="dossier-row"><span class="dossier-row-label">Flight No</span><span class="dossier-row-value">${escHtml(resource.flightNo)}</span></div>` : ''}
       ${resource.from || resource.to ? `<div class="dossier-row"><span class="dossier-row-label">From / To</span><span class="dossier-row-value">${escHtml(resource.from || '—')} → ${escHtml(resource.to || '—')}</span></div>` : ''}
@@ -886,6 +903,7 @@ function renderResourceCard(resource) {
       ${resource.bookedVia ? `<div class="dossier-row"><span class="dossier-row-label">Booked Via</span><span class="dossier-row-value">${buildBookedViaLink(resource.bookedVia)}</span></div>` : ''}
       ${resource.presaleCode ? `<div class="dossier-row"><span class="dossier-row-label">Pre-sale Code</span><div class="presale-code">${escHtml(resource.presaleCode)}</div></div>` : ''}
       ${resource.onSaleDate ? `<div class="dossier-row"><span class="dossier-row-label">On Sale</span><span class="dossier-row-value">${formatDateShort(resource.onSaleDate)}</span></div>` : ''}
+      ${resource.dateBooked ? `<div class="dossier-row"><span class="dossier-row-label">Date Booked</span><span class="dossier-row-value">${formatDateShort(resource.dateBooked)}</span></div>` : ''}
       ${resource.notes ? `<div class="resource-notes">${escHtml(resource.notes)}</div>` : ''}
       ${attachCount > 0 ? `<div class="rattach-grid">${attachHTML}</div>` : ''}
       <div class="resource-add-more">
@@ -1412,11 +1430,11 @@ async function updateGigStatus(gigId, newStatus) {
   renderDossier(updated);
   showToast(`Marked as ${statusLabel(newStatus)}`);
 
-  // If newly booked or attended, prompt to add ticket resource if none exists
+  // If newly booked or attended, prompt to add gig ticket resource if none exists
   if (newStatus === 'booked' || newStatus === 'attended') {
-    const hasEticket = (updated.resources || []).some(r => r.type === 'eticket');
-    if (!hasEticket) {
-      setTimeout(() => openAddResourceSheet(updated, 'eticket'), 350);
+    const hasTicket = (updated.resources || []).some(r => r.type === 'gigticket' || r.type === 'eticket');
+    if (!hasTicket) {
+      setTimeout(() => openAddResourceSheet(updated, 'gigticket'), 350);
     }
   }
 }
@@ -1736,15 +1754,14 @@ function renderScrapbookViewer(gig) {
 // Fields shown per resource type. Each entry is an array of field IDs to show.
 // Notes and Attachments are always shown. Title and Type are always shown.
 const RESOURCE_TYPE_FIELDS = {
-  eticket:    ['bookingref', 'price-qty', 'bookedvia', 'presale', 'onsale'],
-  hotel:      ['bookingref', 'checkin', 'checkout', 'price-qty', 'bookedvia'],
-  train:      ['bookingref', 'from-to', 'dep-datetime', 'price-qty', 'bookedvia'],
-  flight:     ['bookingref', 'flightno', 'from-to', 'dep-datetime', 'price-qty', 'bookedvia'],
-  parking:    ['bookingref', 'location', 'arr-datetime', 'price-qty', 'bookedvia'],
-  restaurant: ['bookingref', 'res-datetime', 'covers', 'price-qty', 'bookedvia'],
-  other:      ['bookingref', 'flightno', 'from-to', 'dep-datetime', 'checkin', 'checkout',
-               'checkin-time', 'location', 'arr-datetime', 'res-datetime', 'covers',
-               'price-qty', 'bookedvia', 'presale', 'onsale'],
+  gigticket:  ['bookingref', 'price-qty', 'bookedvia', 'presale', 'onsale', 'date-booked'],
+  eticket:    ['ticket-details', 'price-qty', 'date-booked'],
+  hotel:      ['bookingref', 'checkin', 'checkout', 'price-qty', 'bookedvia', 'date-booked'],
+  train:      ['bookingref', 'from-to', 'dep-datetime', 'price-qty', 'bookedvia', 'date-booked'],
+  flight:     ['bookingref', 'flightno', 'from-to', 'dep-datetime', 'price-qty', 'bookedvia', 'date-booked'],
+  parking:    ['bookingref', 'location', 'arr-datetime', 'price-qty', 'bookedvia', 'date-booked'],
+  restaurant: ['bookingref', 'res-datetime', 'covers', 'price-qty', 'bookedvia', 'date-booked'],
+  other:      ['ticket-details', 'price-qty', 'date-booked'],
 };
 
 // Label overrides per type for certain fields
@@ -1753,6 +1770,7 @@ const RESOURCE_FIELD_LABELS = {
   flight:     { 'from-to': 'Departure / Arrival Airport', 'dep-datetime': 'Departure' },
   parking:    { 'location': 'Car Park / Location', 'arr-datetime': 'Arrival Date & Time' },
   restaurant: { 'res-datetime': 'Reservation Date & Time' },
+  other:      { 'ticket-details': 'Resource Details' },
 };
 
 function openAddResourceSheet(gig, preselectedType = null) {
@@ -1780,6 +1798,11 @@ function openAddResourceSheet(gig, preselectedType = null) {
       <div class="ares-field">
         <label class="ares-label">Type of Record</label>
         <div class="resource-type-chips" id="ares-type-chips">${typeChips}</div>
+      </div>
+
+      <div class="ares-field" data-field="ticket-details">
+        <label class="ares-label" data-label="ticket-details">Ticket Details</label>
+        <textarea id="ares-ticket-details" class="ares-textarea" rows="2" placeholder="Enter a brief description of the ticket — not for gig tickets!"></textarea>
       </div>
 
       <div class="ares-field" data-field="bookingref">
@@ -1875,6 +1898,11 @@ function openAddResourceSheet(gig, preselectedType = null) {
         <input type="date" id="ares-onsale" class="ares-input">
       </div>
 
+      <div class="ares-field" data-field="date-booked">
+        <label class="ares-label">Date Booked</label>
+        <input type="date" id="ares-datebooked" class="ares-input">
+      </div>
+
       <div class="ares-field">
         <label class="ares-label">Notes</label>
         <textarea id="ares-notes" class="ares-textarea" rows="3" placeholder="Any additional details..."></textarea>
@@ -1923,6 +1951,7 @@ function openAddResourceSheet(gig, preselectedType = null) {
       } else {
         // Restore defaults
         const defaults = {
+          'ticket-details': 'Ticket Details',
           'bookingref': 'Booking Ref', 'from-to': 'From / To',
           'dep-datetime': 'Departure Date & Time', 'checkin': 'Check-in Date',
           'checkin-time': 'Check-in Time', 'location': 'Location',
@@ -2005,6 +2034,7 @@ function openAddResourceSheet(gig, preselectedType = null) {
       id: crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36),
       title,
       type: selectedType,
+      ticketDetails: v('ares-ticket-details') || null,
       bookingRef: v('ares-bookingref') || null,
       flightNo: v('ares-flightno') || null,
       from: v('ares-from') || null,
@@ -2025,6 +2055,7 @@ function openAddResourceSheet(gig, preselectedType = null) {
       bookedVia: v('ares-bookedvia') || null,
       presaleCode: v('ares-presale') || null,
       onSaleDate: v('ares-onsale') || null,
+      dateBooked: v('ares-datebooked') || null,
       notes: v('ares-notes'),
       addToScrapbook,
       attachments: [...pendingAttachments],
@@ -2272,10 +2303,10 @@ function renderStats() {
   const wishlist = gigs.filter(g => g.status === 'wishlist');
   const dna = gigs.filter(g => g.status === 'dna');
 
-  // Ticket spend: sum of eticket-type resources for attended gigs
+  // Ticket spend: sum of gigticket and eticket resources for attended gigs
   const ticketSpend = attended.reduce((sum, g) => {
     return sum + (g.resources || [])
-      .filter(r => r.type === 'eticket')
+      .filter(r => r.type === 'gigticket' || r.type === 'eticket')
       .reduce((s, r) => s + ((parseFloat(r.price) || 0) * (parseInt(r.quantity) || 1)), 0);
   }, 0);
 
