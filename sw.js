@@ -1,4 +1,4 @@
-const APP_VERSION = '1.0.20';
+const APP_VERSION = '1.0.21';
 const CACHE_NAME = `mygiglife-v${APP_VERSION}`;
 
 const CORE_ASSETS = [

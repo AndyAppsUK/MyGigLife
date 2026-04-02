@@ -1636,19 +1636,14 @@ function renderScrapbookViewer(gig) {
   viewerBody.innerHTML = `
     <div class="viewer-photos-area" id="viewer-photos-area">
       ${photos.length > 0 ? `
-        <div class="viewer-main-wrap">
-          <img class="viewer-main-photo" id="viewer-main-photo" src="${currentPhoto.data}" alt="Gig photo">
-          ${photos.length > 1 ? `
-            <button class="viewer-nav-btn viewer-prev" id="viewer-prev" ${idx === 0 ? 'disabled' : ''}>‹</button>
-            <button class="viewer-nav-btn viewer-next" id="viewer-next" ${idx === photos.length - 1 ? 'disabled' : ''}>›</button>
-            <div class="viewer-photo-counter">${idx + 1} / ${photos.length}</div>
-          ` : ''}
-        </div>
-        ${dotsHTML}
-        ${photos.length > 1 ? `
         <div class="viewer-photo-grid" id="viewer-photo-grid">
-          ${photos.map((p, i) => `<img class="viewer-thumb ${i === idx ? 'active' : ''}" src="${p.data}" data-index="${i}" loading="lazy">`).join('')}
-        </div>` : ''}
+          ${photos.map((p, i) => `
+            <div class="viewer-thumb-wrap" data-index="${i}">
+              <img class="viewer-thumb" src="${p.data}" data-index="${i}" loading="lazy" alt="Photo ${i+1}">
+              ${p.caption ? `<div class="viewer-thumb-caption">${escHtml(p.caption)}</div>` : ''}
+            </div>
+          `).join('')}
+        </div>
       ` : `
         <div class="viewer-photo-placeholder" id="photo-upload-trigger">
           <div style="font-size:48px">📷</div>
@@ -1666,32 +1661,51 @@ function renderScrapbookViewer(gig) {
       </div>
       <div class="viewer-notes" contenteditable="true" id="viewer-notes" placeholder="Add notes about this gig...">${escHtml(gig.notes || '')}</div>
     </div>
+
+    <!-- Fullscreen photo lightbox -->
+    <div class="photo-lightbox" id="photo-lightbox" style="display:none">
+      <button class="lightbox-close" id="lightbox-close">✕</button>
+      <button class="lightbox-nav lightbox-prev" id="lightbox-prev">‹</button>
+      <div class="lightbox-img-wrap">
+        <img class="lightbox-img" id="lightbox-img" src="" alt="">
+        <div class="lightbox-counter" id="lightbox-counter"></div>
+      </div>
+      <button class="lightbox-nav lightbox-next" id="lightbox-next">›</button>
+    </div>
   `;
 
-  // Prev / Next buttons
-  const prevBtn = document.getElementById('viewer-prev');
-  const nextBtn = document.getElementById('viewer-next');
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      if (App.currentPhotoIndex > 0) { App.currentPhotoIndex--; renderScrapbookViewer(gig); }
-    });
+  // Thumbnail → open lightbox
+  const grid = document.getElementById('viewer-photo-grid');
+  const lightbox = document.getElementById('photo-lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCounter = document.getElementById('lightbox-counter');
+
+  function openLightbox(index) {
+    App.currentPhotoIndex = index;
+    lightboxImg.src = photos[index].data;
+    lightboxCounter.textContent = `${index + 1} / ${photos.length}`;
+    document.getElementById('lightbox-prev').style.display = index === 0 ? 'none' : '';
+    document.getElementById('lightbox-next').style.display = index === photos.length - 1 ? 'none' : '';
+    lightbox.style.display = 'flex';
   }
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      if (App.currentPhotoIndex < photos.length - 1) { App.currentPhotoIndex++; renderScrapbookViewer(gig); }
+
+  if (grid) {
+    grid.querySelectorAll('.viewer-thumb-wrap').forEach(wrap => {
+      wrap.addEventListener('click', () => openLightbox(parseInt(wrap.dataset.index)));
     });
   }
 
-  // Thumbnail clicks
-  const grid = document.getElementById('viewer-photo-grid');
-  if (grid) {
-    grid.querySelectorAll('.viewer-thumb').forEach(thumb => {
-      thumb.addEventListener('click', () => {
-        App.currentPhotoIndex = parseInt(thumb.dataset.index);
-        renderScrapbookViewer(gig);
-      });
-    });
-  }
+  document.getElementById('lightbox-close')?.addEventListener('click', () => { lightbox.style.display = 'none'; });
+  lightbox?.addEventListener('click', e => { if (e.target === lightbox) lightbox.style.display = 'none'; });
+
+  document.getElementById('lightbox-prev')?.addEventListener('click', e => {
+    e.stopPropagation();
+    if (App.currentPhotoIndex > 0) openLightbox(App.currentPhotoIndex - 1);
+  });
+  document.getElementById('lightbox-next')?.addEventListener('click', e => {
+    e.stopPropagation();
+    if (App.currentPhotoIndex < photos.length - 1) openLightbox(App.currentPhotoIndex + 1);
+  });
 
   // Photo upload
   const photoInput = document.getElementById('viewer-photo-input');
@@ -2550,6 +2564,19 @@ function renderHelpScreen() {
       a: `Tap the <strong>⚙</strong> icon in the top-right corner. From here you can set your name, home postcode, annual budget, photo quality, and notification preferences. You can also manage backups and import data from this screen.`
     },
     {
+      icon: '📱',
+      q: 'Move MyGigLife to a new phone',
+      a: `<strong>Step 1 — Back up on your old phone:</strong> Go to <em>Settings</em> (⚙ top right) and tap <strong>Backup Now</strong>. Save the downloaded JSON file somewhere you can access from your new phone — your cloud storage (iCloud, Google Drive, Dropbox) or email it to yourself.<br><br>
+<strong>Step 2 — Install on your new phone:</strong> Open your browser, navigate to the app URL, then tap <em>Share → Add to Home Screen</em> to install it.<br><br>
+<strong>Step 3 — Restore your data:</strong> On the new phone, go to <em>Settings</em> and tap <strong>Restore from Backup</strong>. Select the JSON file you saved in Step 1. All your gigs, photos, and resources will be imported.<br><br>
+<em>Note: because data is stored on-device, you must do this transfer manually — there is no automatic sync between phones.</em>`
+    },
+    {
+      icon: '📣',
+      q: 'Share MyGigLife with friends',
+      a: `Tap the <strong>Share App 📣</strong> button below to send a link to MyGigLife to your friends.`,
+    },
+    {
       icon: '❤️',
       q: 'Support MyGigLife',
       a: `MyGigLife is free and always will be. If you'd like to say thanks, tap the <strong>❤️ Support MyGigLife</strong> banner at the bottom of the screen to visit the tip jar.`
@@ -2569,6 +2596,7 @@ function renderHelpScreen() {
           <div class="help-answer" id="help-ans-${i}">${t.a}</div>
         </div>
       `).join('')}
+      <button class="help-share-btn" id="help-share-app-btn">📣 Share MyGigLife with a friend</button>
     </div>
   `;
 
@@ -2583,6 +2611,21 @@ function renderHelpScreen() {
   });
 
   document.getElementById('help-back-btn').addEventListener('click', closeHelpScreen);
+
+  document.getElementById('help-share-app-btn')?.addEventListener('click', () => {
+    const shareData = {
+      title: 'MyGigLife',
+      text: '🎸 Check out MyGigLife — a free app for tracking all your gigs, tickets, and memories!',
+      url: 'https://mygiglife.netlify.app'
+    };
+    if (navigator.share) {
+      navigator.share(shareData).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`).then(() => {
+        showToast('Link copied to clipboard!');
+      });
+    }
+  });
 }
 
 // ============================================================
@@ -2610,20 +2653,20 @@ function renderSupportScreen() {
         <div class="settings-card">
           <p class="tip-jar-message">MyGigLife is free and always will be. If it's made your gig life easier, you can say thanks here!</p>
           <div class="tip-jar-grid">
-            <a href="${AFFILIATE.kofi}?amount=3" target="_blank" class="tip-jar-btn">
+            <a href="${AFFILIATE.kofi}?amount=4" target="_blank" class="tip-jar-btn">
               <span class="tip-jar-icon">🍺</span>
               <span class="tip-jar-label">Buy me a pint</span>
-              <span class="tip-jar-amount">£3</span>
+              <span class="tip-jar-amount">£4</span>
             </a>
             <a href="${AFFILIATE.kofi}?amount=10" target="_blank" class="tip-jar-btn">
               <span class="tip-jar-icon">🎫</span>
               <span class="tip-jar-label">Buy me a ticket</span>
               <span class="tip-jar-amount">£10</span>
             </a>
-            <a href="${AFFILIATE.kofi}?amount=50" target="_blank" class="tip-jar-btn">
+            <a href="${AFFILIATE.kofi}?amount=20" target="_blank" class="tip-jar-btn">
               <span class="tip-jar-icon">🎪</span>
               <span class="tip-jar-label">Buy me a festival pass</span>
-              <span class="tip-jar-amount">£50</span>
+              <span class="tip-jar-amount">£20</span>
             </a>
           </div>
         </div>
