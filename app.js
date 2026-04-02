@@ -6,6 +6,61 @@
 'use strict';
 
 // ============================================================
+// Resource Types
+// ============================================================
+const RESOURCE_TYPES = [
+  { key: 'eticket',    label: 'E-Ticket',       icon: '🎫' },
+  { key: 'hotel',      label: 'Hotel',           icon: '🏨' },
+  { key: 'train',      label: 'Train / Coach',   icon: '🚂' },
+  { key: 'flight',     label: 'Flight',          icon: '✈️' },
+  { key: 'parking',    label: 'Car Park',        icon: '🚗' },
+  { key: 'restaurant', label: 'Restaurant',      icon: '🍽' },
+  { key: 'other',      label: 'Other',           icon: '📄' },
+];
+
+function getResourceType(key) {
+  return RESOURCE_TYPES.find(t => t.key === key) || RESOURCE_TYPES[RESOURCE_TYPES.length - 1];
+}
+
+// ============================================================
+// Affiliate & Monetisation Config
+// Replace placeholder IDs with your actual affiliate IDs before deploying
+// ============================================================
+const AFFILIATE = {
+  // Skiddle: replace with your affiliate tracking URL from skiddle.com/affiliates
+  skiddle: 'https://www.skiddle.com',            // TODO: replace with affiliate URL
+
+  // See Tickets: replace with your Awin deep link (programme ID: search "See Tickets" on awin.com)
+  seetickets: 'https://www.seetickets.com',      // TODO: replace with Awin affiliate URL
+
+  // Ticketmaster: replace with your Impact tracking link
+  ticketmaster: 'https://www.ticketmaster.co.uk', // TODO: replace with Impact affiliate URL
+
+  // Gigantic: contact gigantic.com/work-with-us to arrange direct affiliate deal
+  gigantic: 'https://www.gigantic.com',           // TODO: replace with direct affiliate URL once arranged
+
+  // Booking.com: replace YOUR_AFFILIATE_ID with your aid= parameter from booking.com/affiliate-program
+  bookingComAffiliateId: 'YOUR_AFFILIATE_ID',     // TODO: replace with your Booking.com affiliate ID
+
+  // Ko-fi tip jar: replace with your Ko-fi username URL
+  kofi: 'https://ko-fi.com/andyapps',            // TODO: replace with your Ko-fi URL
+};
+
+// Ticket platform affiliate URL lookup (used in Gig Dossier "Booked Via" link)
+const TICKET_PLATFORM_URLS = {
+  'ticketmaster': AFFILIATE.ticketmaster,
+  'see tickets': AFFILIATE.seetickets,
+  'seetickets': AFFILIATE.seetickets,
+  'skiddle': AFFILIATE.skiddle,
+  'dice': 'https://dice.fm',
+  'gigantic': AFFILIATE.gigantic,
+  'axs': 'https://www.axs.com',
+  'ents24': 'https://www.ents24.com',
+  'songkick': 'https://www.songkick.com',
+  'venue direct': null,
+};
+
+// ============================================================
 // App State
 // ============================================================
 const App = {
@@ -190,7 +245,7 @@ function createGigTemplate(overrides = {}) {
     notes: '',
     rating: 0,
     scrapbook: { photos: [] },
-    documents: [],
+    resources: [],
     createdAt: '',
     updatedAt: '',
     ...overrides
@@ -775,22 +830,118 @@ function renderAddActForm(gig) {
     </div>`;
 }
 
-function renderAttachmentsGrid(gig) {
-  const docs = gig.documents || [];
-  if (docs.length === 0) {
-    return `<div class="attachments-empty">No attachments yet</div>`;
-  }
-  return docs.map(doc => {
-    const isImage = doc.type && doc.type.startsWith('image/');
+function renderResourcesSection(gig) {
+  migrateDocumentsToResources(gig);
+  const resources = gig.resources || [];
+  const cards = resources.length > 0
+    ? resources.map(r => renderResourceCard(r)).join('')
+    : `<div class="resources-empty">No resources yet — add tickets, hotel bookings, train tickets and more.</div>`;
+  return `<div id="resources-list">${cards}</div>
+    <button class="add-resource-btn" id="btn-add-resource">＋ Add Resource</button>`;
+}
+
+function renderResourceCard(resource) {
+  const type = getResourceType(resource.type);
+  const attachments = resource.attachments || [];
+  const attachCount = attachments.length;
+
+  const attachHTML = attachments.map(att => {
+    const isImage = att.fileType && att.fileType.startsWith('image/');
     const thumb = isImage
-      ? `<img class="attach-thumb" src="${doc.data}" alt="${escHtml(doc.name)}">`
-      : `<div class="attach-file-icon">📄</div>`;
-    return `<div class="attach-item" data-doc-id="${doc.id}">
+      ? `<img class="rattach-thumb" src="${att.data}" alt="${escHtml(att.label || att.fileName)}">`
+      : `<div class="rattach-file-icon">📄</div>`;
+    return `<div class="rattach-item" data-attach-id="${att.id}" data-resource-id="${resource.id}">
       ${thumb}
-      <div class="attach-name">${escHtml(doc.name)}</div>
-      <button class="attach-remove-btn" data-doc-id="${doc.id}" title="Remove">✕</button>
+      <div class="rattach-label">${escHtml(att.label || att.fileName)}</div>
+      <button class="rattach-remove-btn" data-attach-id="${att.id}" data-resource-id="${resource.id}" title="Remove">✕</button>
     </div>`;
   }).join('');
+
+  return `<div class="resource-card" data-resource-id="${resource.id}">
+    <div class="resource-card-header">
+      <span class="resource-card-icon">${type.icon}</span>
+      <div class="resource-card-title-wrap">
+        <span class="resource-card-title">${escHtml(resource.title)}</span>
+        <span class="resource-type-badge">${type.label}</span>
+      </div>
+      ${attachCount > 0 ? `<span class="resource-attach-count">📎 ${attachCount}</span>` : ''}
+      <button class="resource-delete-btn" data-resource-id="${resource.id}" title="Delete">🗑</button>
+      <span class="resource-chevron">›</span>
+    </div>
+    <div class="resource-card-body">
+      ${resource.bookingRef ? `<div class="dossier-row"><span class="dossier-row-label">Booking Ref</span><span class="dossier-row-value">${escHtml(resource.bookingRef)}</span></div>` : ''}
+      ${resource.flightNo ? `<div class="dossier-row"><span class="dossier-row-label">Flight No</span><span class="dossier-row-value">${escHtml(resource.flightNo)}</span></div>` : ''}
+      ${resource.from || resource.to ? `<div class="dossier-row"><span class="dossier-row-label">From / To</span><span class="dossier-row-value">${escHtml(resource.from || '—')} → ${escHtml(resource.to || '—')}</span></div>` : ''}
+      ${resource.depDate ? `<div class="dossier-row"><span class="dossier-row-label">Departure</span><span class="dossier-row-value">${formatDateShort(resource.depDate)}${resource.depTime ? ' at ' + resource.depTime : ''}</span></div>` : ''}
+      ${resource.checkin ? `<div class="dossier-row"><span class="dossier-row-label">Check-in</span><span class="dossier-row-value">${formatDateShort(resource.checkin)}${resource.checkinTime ? ' at ' + resource.checkinTime : ''}</span></div>` : ''}
+      ${resource.checkout ? `<div class="dossier-row"><span class="dossier-row-label">Check-out</span><span class="dossier-row-value">${formatDateShort(resource.checkout)}</span></div>` : ''}
+      ${resource.location ? `<div class="dossier-row"><span class="dossier-row-label">Location</span><span class="dossier-row-value">${escHtml(resource.location)}</span></div>` : ''}
+      ${resource.arrDate ? `<div class="dossier-row"><span class="dossier-row-label">Arrival</span><span class="dossier-row-value">${formatDateShort(resource.arrDate)}${resource.arrTime ? ' at ' + resource.arrTime : ''}</span></div>` : ''}
+      ${resource.resDate ? `<div class="dossier-row"><span class="dossier-row-label">Reservation</span><span class="dossier-row-value">${formatDateShort(resource.resDate)}${resource.resTime ? ' at ' + resource.resTime : ''}</span></div>` : ''}
+      ${resource.covers ? `<div class="dossier-row"><span class="dossier-row-label">Covers</span><span class="dossier-row-value">${resource.covers}</span></div>` : ''}
+      ${resource.price ? `<div class="dossier-row"><span class="dossier-row-label">Price</span><span class="dossier-row-value">${resource.quantity && resource.quantity > 1 ? `£${resource.price} × ${resource.quantity} = <strong>£${(resource.price * resource.quantity).toFixed(2)}</strong>` : `£${resource.price}`}</span></div>` : ''}
+      ${resource.bookedVia ? `<div class="dossier-row"><span class="dossier-row-label">Booked Via</span><span class="dossier-row-value">${buildBookedViaLink(resource.bookedVia)}</span></div>` : ''}
+      ${resource.presaleCode ? `<div class="dossier-row"><span class="dossier-row-label">Pre-sale Code</span><div class="presale-code">${escHtml(resource.presaleCode)}</div></div>` : ''}
+      ${resource.onSaleDate ? `<div class="dossier-row"><span class="dossier-row-label">On Sale</span><span class="dossier-row-value">${formatDateShort(resource.onSaleDate)}</span></div>` : ''}
+      ${resource.notes ? `<div class="resource-notes">${escHtml(resource.notes)}</div>` : ''}
+      ${attachCount > 0 ? `<div class="rattach-grid">${attachHTML}</div>` : ''}
+      <div class="resource-add-more">
+        <label class="resource-attach-btn" for="res-file-${resource.id}">📎 Add File</label>
+        <input type="file" id="res-file-${resource.id}" accept="image/*,application/pdf,.pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" multiple style="display:none" data-resource-id="${resource.id}">
+        <label class="resource-attach-btn" for="res-cam-${resource.id}">📷 Take Photo</label>
+        <input type="file" id="res-cam-${resource.id}" accept="image/*" capture="environment" style="display:none" data-resource-id="${resource.id}">
+      </div>
+    </div>
+  </div>`;
+}
+
+// Migrate old gig.documents[] to the new gig.resources[] format (one-time, on open)
+function migrateDocumentsToResources(gig) {
+  if (gig.resources) return; // already migrated
+  if (gig.documents && gig.documents.length > 0) {
+    gig.resources = [{
+      id: crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-migrated',
+      title: 'Documents',
+      type: 'other',
+      notes: '',
+      addToScrapbook: false,
+      attachments: gig.documents.map(doc => ({
+        id: doc.id,
+        label: doc.name,
+        fileName: doc.name,
+        fileType: doc.type,
+        data: doc.data,
+        addedAt: doc.addedAt
+      })),
+      createdAt: new Date().toISOString()
+    }];
+  } else {
+    gig.resources = [];
+  }
+}
+
+// Build Booking.com affiliate hotel search URL pre-filled with venue area and gig date
+function buildBookingComUrl(venue, gigDate) {
+  const area = encodeURIComponent(venue.postcode || venue.name || '');
+  const checkin = gigDate || '';
+  const checkoutDate = checkin ? new Date(checkin) : null;
+  if (checkoutDate) checkoutDate.setDate(checkoutDate.getDate() + 1);
+  const checkout = checkoutDate ? checkoutDate.toISOString().slice(0, 10) : '';
+  const aid = AFFILIATE.bookingComAffiliateId;
+  if (aid && aid !== 'YOUR_AFFILIATE_ID') {
+    return `https://www.booking.com/searchresults.html?ss=${area}&checkin=${checkin}&checkout=${checkout}&aid=${aid}`;
+  }
+  return `https://www.booking.com/searchresults.html?ss=${area}&checkin=${checkin}&checkout=${checkout}`;
+}
+
+// Build a tappable affiliate link for a "Booked Via" platform name
+function buildBookedViaLink(platform) {
+  const key = (platform || '').toLowerCase().trim();
+  const url = TICKET_PLATFORM_URLS[key];
+  if (url) {
+    return `<a href="${escHtml(url)}" target="_blank" class="booked-via-link">${escHtml(platform)}</a>`;
+  }
+  return escHtml(platform);
 }
 
 function renderDossier(gig) {
@@ -849,7 +1000,7 @@ function renderDossier(gig) {
     <div class="dossier-cards">
 
       <!-- When card -->
-      <div class="dossier-card" id="card-when">
+      <div class="dossier-card collapsed" id="card-when">
         <div class="dossier-card-header">
           <span class="dossier-card-icon">📅</span>
           <span class="dossier-card-title">When</span>
@@ -890,7 +1041,7 @@ function renderDossier(gig) {
       </div>
 
       <!-- Venue card -->
-      <div class="dossier-card" id="card-venue">
+      <div class="dossier-card collapsed" id="card-venue">
         <div class="dossier-card-header">
           <span class="dossier-card-icon">📍</span>
           <span class="dossier-card-title">Venue</span>
@@ -924,68 +1075,26 @@ function renderDossier(gig) {
           ${venue.name ? `
           <div class="venue-action-btns">
             <a href="${venueMapsUrl}" target="_blank" class="venue-action-btn">🗺 Map</a>
-            <a href="https://www.google.com/maps/search/hotels+near+${encodeURIComponent(venue.name)}" target="_blank" class="venue-action-btn">🏨 Hotels</a>
+            <a href="${buildBookingComUrl(venue, gig.date)}" target="_blank" class="venue-action-btn">🏨 Hotels</a>
             <a href="https://www.google.com/maps/search/restaurants+near+${encodeURIComponent(venue.name)}" target="_blank" class="venue-action-btn">🍽 Restaurants</a>
           </div>` : ''}
         </div>
       </div>
 
-      <!-- Tickets card -->
-      <div class="dossier-card" id="card-tickets">
+      <!-- Tickets & Bookings card -->
+      <div class="dossier-card collapsed" id="card-resources">
         <div class="dossier-card-header">
           <span class="dossier-card-icon">🎫</span>
-          <span class="dossier-card-title">Tickets</span>
+          <span class="dossier-card-title">Tickets &amp; Bookings</span>
           <span class="dossier-card-chevron">⌄</span>
         </div>
         <div class="dossier-card-body">
-          <div class="dossier-row">
-            <span class="dossier-row-label">Booking Ref</span>
-            ${isEditing
-              ? `<input type="text" class="dossier-row-value editable" id="edit-bookingref" value="${escHtml(tickets.bookingRef||'')}">`
-              : `<span class="dossier-row-value">${tickets.bookingRef || '—'}</span>`
-            }
-          </div>
-          <div class="dossier-row">
-            <span class="dossier-row-label">Price</span>
-            ${isEditing
-              ? `<input type="number" class="dossier-row-value editable" id="edit-price" value="${tickets.price||''}" placeholder="0.00" step="0.01">`
-              : `<span class="dossier-row-value">${tickets.price ? `£${tickets.price}` : '—'}</span>`
-            }
-          </div>
-          <div class="dossier-row">
-            <span class="dossier-row-label">Quantity</span>
-            ${isEditing
-              ? `<input type="number" class="dossier-row-value editable" id="edit-qty" value="${tickets.quantity||1}" min="1">`
-              : `<span class="dossier-row-value">${tickets.quantity || 1}</span>`
-            }
-          </div>
-          ${ticketTotal ? `
-          <div class="dossier-row">
-            <span class="dossier-row-label">Total</span>
-            <span class="dossier-row-value" style="font-weight:700">£${ticketTotal}</span>
-          </div>` : ''}
-          <div class="dossier-row">
-            <span class="dossier-row-label">Booked Via</span>
-            ${isEditing
-              ? `<input type="text" class="dossier-row-value editable" id="edit-bookedvia" value="${escHtml(tickets.bookedVia||'')}">`
-              : `<span class="dossier-row-value">${tickets.bookedVia || '—'}</span>`
-            }
-          </div>
-          ${gig.status === 'wishlist' && tickets.presaleCode ? `
-          <div class="dossier-row">
-            <span class="dossier-row-label">Pre-sale</span>
-            <div class="presale-code" id="presale-copy" title="Tap to copy">${escHtml(tickets.presaleCode)}</div>
-          </div>` : ''}
-          ${gig.status === 'wishlist' && tickets.onSaleDate ? `
-          <div class="dossier-row">
-            <span class="dossier-row-label">On Sale</span>
-            <span class="dossier-row-value">${formatDateShort(tickets.onSaleDate)}</span>
-          </div>` : ''}
+          ${renderResourcesSection(gig)}
         </div>
       </div>
 
       <!-- Going With card -->
-      <div class="dossier-card" id="card-going">
+      <div class="dossier-card collapsed" id="card-going">
         <div class="dossier-card-header">
           <span class="dossier-card-icon">👥</span>
           <span class="dossier-card-title">Going With</span>
@@ -1001,7 +1110,7 @@ function renderDossier(gig) {
 
       ${gig.isFestival ? `
       <!-- Line-Up card (festivals) -->
-      <div class="dossier-card" id="card-lineup">
+      <div class="dossier-card collapsed" id="card-lineup">
         <div class="dossier-card-header">
           <span class="dossier-card-icon">🎶</span>
           <span class="dossier-card-title">Line-Up</span>
@@ -1018,7 +1127,7 @@ function renderDossier(gig) {
         </div>
       </div>` : `
       <!-- Support Acts (non-festivals) -->
-      <div class="dossier-card" id="card-support">
+      <div class="dossier-card collapsed" id="card-support">
         <div class="dossier-card-header">
           <span class="dossier-card-icon">🎵</span>
           <span class="dossier-card-title">Support Acts</span>
@@ -1033,7 +1142,7 @@ function renderDossier(gig) {
       </div>`}
 
       <!-- Transport card -->
-      <div class="dossier-card" id="card-transport">
+      <div class="dossier-card collapsed" id="card-transport">
         <div class="dossier-card-header">
           <span class="dossier-card-icon">🚗</span>
           <span class="dossier-card-title">Transport & Parking</span>
@@ -1048,7 +1157,7 @@ function renderDossier(gig) {
       </div>
 
       <!-- Notes card -->
-      <div class="dossier-card" id="card-notes">
+      <div class="dossier-card collapsed" id="card-notes">
         <div class="dossier-card-header">
           <span class="dossier-card-icon">📝</span>
           <span class="dossier-card-title">Notes</span>
@@ -1059,26 +1168,9 @@ function renderDossier(gig) {
         </div>
       </div>
 
-      <!-- Documents / Attachments card (always visible) -->
-      <div class="dossier-card" id="card-documents">
-        <div class="dossier-card-header">
-          <span class="dossier-card-icon">📎</span>
-          <span class="dossier-card-title">Attachments</span>
-          <span class="dossier-card-chevron">⌄</span>
-        </div>
-        <div class="dossier-card-body">
-          <div class="attachments-hint">Hotel bookings, tickets, rail tickets, flight confirmations, anything you need on the day.</div>
-          <div class="attachments-grid" id="attachments-grid">
-            ${renderAttachmentsGrid(gig)}
-          </div>
-          <label class="attach-add-btn" for="doc-upload-input">＋ Add Attachment</label>
-          <input type="file" id="doc-upload-input" accept="image/*,application/pdf,.pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" multiple style="display:none">
-        </div>
-      </div>
-
       ${gig.status === 'attended' ? `
       <!-- Rating card -->
-      <div class="dossier-card" id="card-rating">
+      <div class="dossier-card collapsed" id="card-rating">
         <div class="dossier-card-header">
           <span class="dossier-card-icon">⭐</span>
           <span class="dossier-card-title">Your Rating</span>
@@ -1192,47 +1284,8 @@ function attachDossierListeners(gig) {
     scrapbookBtn.addEventListener('click', () => openScrapbookViewer(gig.id));
   }
 
-  // Document attachments upload
-  const docInput = document.getElementById('doc-upload-input');
-  if (docInput) {
-    docInput.addEventListener('change', async (e) => {
-      const files = Array.from(e.target.files);
-      if (!files.length) return;
-
-      showToast('Adding attachments...');
-      if (!gig.documents) gig.documents = [];
-
-      const quality = App.settings.photos.quality === 'high' ? 0.9 : 0.7;
-      const maxDim = App.settings.photos.quality === 'high' ? 1600 : 1200;
-
-      for (const file of files) {
-        let data;
-        if (file.type.startsWith('image/')) {
-          data = await compressImage(file, maxDim, quality);
-        } else {
-          data = await fileToBase64(file);
-        }
-        if (data) {
-          gig.documents.push({
-            id: crypto.randomUUID ? crypto.randomUUID() : Date.now() + Math.random().toString(36),
-            name: file.name,
-            type: file.type,
-            data,
-            addedAt: new Date().toISOString()
-          });
-        }
-      }
-
-      await DB.saveGig(gig);
-      App.allGigs = await DB.getAllGigs();
-      const grid = document.getElementById('attachments-grid');
-      if (grid) grid.innerHTML = renderAttachmentsGrid(gig);
-      attachDocumentRemoveListeners(gig);
-      showToast(`${files.length} attachment${files.length > 1 ? 's' : ''} added!`);
-      docInput.value = '';
-    });
-  }
-  attachDocumentRemoveListeners(gig);
+  // Resources listeners
+  attachResourceListeners(gig);
 
   // Star rating
   const starInput = document.getElementById('star-rating-input');
@@ -1648,6 +1701,441 @@ function renderScrapbookViewer(gig) {
   }
 }
 
+// Fields shown per resource type. Each entry is an array of field IDs to show.
+// Notes and Attachments are always shown. Title and Type are always shown.
+const RESOURCE_TYPE_FIELDS = {
+  eticket:    ['bookingref', 'price-qty', 'bookedvia', 'presale', 'onsale'],
+  hotel:      ['bookingref', 'checkin', 'checkout', 'price-qty', 'bookedvia'],
+  train:      ['bookingref', 'from-to', 'dep-datetime', 'price-qty', 'bookedvia'],
+  flight:     ['bookingref', 'flightno', 'from-to', 'dep-datetime', 'price-qty', 'bookedvia'],
+  parking:    ['bookingref', 'location', 'arr-datetime', 'price-qty', 'bookedvia'],
+  restaurant: ['bookingref', 'res-datetime', 'covers', 'price-qty', 'bookedvia'],
+  other:      ['bookingref', 'flightno', 'from-to', 'dep-datetime', 'checkin', 'checkout',
+               'checkin-time', 'location', 'arr-datetime', 'res-datetime', 'covers',
+               'price-qty', 'bookedvia', 'presale', 'onsale'],
+};
+
+// Label overrides per type for certain fields
+const RESOURCE_FIELD_LABELS = {
+  train:      { 'from-to': 'From / To', 'dep-datetime': 'Departure' },
+  flight:     { 'from-to': 'Departure / Arrival Airport', 'dep-datetime': 'Departure' },
+  parking:    { 'location': 'Car Park / Location', 'arr-datetime': 'Arrival Date & Time' },
+  restaurant: { 'res-datetime': 'Reservation Date & Time' },
+};
+
+function openAddResourceSheet(gig) {
+  const existing = document.getElementById('add-resource-sheet');
+  if (existing) existing.remove();
+
+  const typeChips = RESOURCE_TYPES.map((t, i) =>
+    `<button class="resource-type-chip${i === 0 ? ' active' : ''}" data-type="${t.key}">${t.icon} ${t.label}</button>`
+  ).join('');
+
+  const sheet = document.createElement('div');
+  sheet.id = 'add-resource-sheet';
+  sheet.className = 'add-resource-overlay';
+  sheet.innerHTML = `
+    <div class="add-resource-sheet">
+      <div class="add-resource-handle"></div>
+      <div class="add-resource-title">Add Resource</div>
+
+      <div class="ares-field">
+        <label class="ares-label">Title *</label>
+        <input type="text" id="ares-title" class="ares-input" placeholder="e.g. Travelodge Birmingham, Virgin Train">
+      </div>
+
+      <div class="ares-field">
+        <label class="ares-label">Type of Record</label>
+        <div class="resource-type-chips" id="ares-type-chips">${typeChips}</div>
+      </div>
+
+      <div class="ares-field" data-field="bookingref">
+        <label class="ares-label" data-label="bookingref">Booking Ref</label>
+        <input type="text" id="ares-bookingref" class="ares-input" placeholder="e.g. ABC123XYZ">
+      </div>
+
+      <div class="ares-field" data-field="flightno">
+        <label class="ares-label">Flight Number</label>
+        <input type="text" id="ares-flightno" class="ares-input" placeholder="e.g. BA2490">
+      </div>
+
+      <div class="ares-field" data-field="from-to">
+        <label class="ares-label" data-label="from-to">From / To</label>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="ares-from" class="ares-input" placeholder="From" style="flex:1">
+          <input type="text" id="ares-to" class="ares-input" placeholder="To" style="flex:1">
+        </div>
+      </div>
+
+      <div class="ares-field" data-field="dep-datetime">
+        <label class="ares-label" data-label="dep-datetime">Departure Date &amp; Time</label>
+        <div style="display:flex;gap:8px">
+          <input type="date" id="ares-depdate" class="ares-input" style="flex:1">
+          <input type="time" id="ares-deptime" class="ares-input" style="flex:0 0 110px">
+        </div>
+      </div>
+
+      <div class="ares-field" data-field="checkin">
+        <label class="ares-label" data-label="checkin">Check-in Date</label>
+        <input type="date" id="ares-checkin" class="ares-input">
+      </div>
+
+      <div class="ares-field" data-field="checkout">
+        <label class="ares-label">Check-out Date</label>
+        <input type="date" id="ares-checkout" class="ares-input">
+      </div>
+
+      <div class="ares-field" data-field="checkin-time">
+        <label class="ares-label" data-label="checkin-time">Check-in Time</label>
+        <input type="time" id="ares-checkintime" class="ares-input">
+      </div>
+
+      <div class="ares-field" data-field="location">
+        <label class="ares-label" data-label="location">Location</label>
+        <input type="text" id="ares-location" class="ares-input" placeholder="Address or location name">
+      </div>
+
+      <div class="ares-field" data-field="arr-datetime">
+        <label class="ares-label" data-label="arr-datetime">Arrival Date &amp; Time</label>
+        <div style="display:flex;gap:8px">
+          <input type="date" id="ares-arrdate" class="ares-input" style="flex:1">
+          <input type="time" id="ares-arrtime" class="ares-input" style="flex:0 0 110px">
+        </div>
+      </div>
+
+      <div class="ares-field" data-field="res-datetime">
+        <label class="ares-label" data-label="res-datetime">Reservation Date &amp; Time</label>
+        <div style="display:flex;gap:8px">
+          <input type="date" id="ares-resdate" class="ares-input" style="flex:1">
+          <input type="time" id="ares-restime" class="ares-input" style="flex:0 0 110px">
+        </div>
+      </div>
+
+      <div class="ares-field" data-field="covers">
+        <label class="ares-label">Number of Covers</label>
+        <input type="number" id="ares-covers" class="ares-input" value="2" min="1">
+      </div>
+
+      <div class="ares-field ares-price-row" data-field="price-qty">
+        <div class="ares-price-wrap">
+          <label class="ares-label">Price (£)</label>
+          <input type="number" id="ares-price" class="ares-input" placeholder="0.00" step="0.01" min="0">
+        </div>
+        <div class="ares-qty-wrap">
+          <label class="ares-label">Qty</label>
+          <input type="number" id="ares-qty" class="ares-input" value="1" min="1">
+        </div>
+      </div>
+
+      <div class="ares-field" data-field="bookedvia">
+        <label class="ares-label">Booked Via</label>
+        <input type="text" id="ares-bookedvia" class="ares-input" placeholder="e.g. Ticketmaster, Skiddle">
+      </div>
+
+      <div class="ares-field" data-field="presale">
+        <label class="ares-label">Pre-sale Code</label>
+        <input type="text" id="ares-presale" class="ares-input" placeholder="Pre-sale code">
+      </div>
+
+      <div class="ares-field" data-field="onsale">
+        <label class="ares-label">On Sale Date</label>
+        <input type="date" id="ares-onsale" class="ares-input">
+      </div>
+
+      <div class="ares-field">
+        <label class="ares-label">Notes</label>
+        <textarea id="ares-notes" class="ares-textarea" rows="3" placeholder="Any additional details..."></textarea>
+      </div>
+
+      <div class="ares-field">
+        <label class="ares-label">Attachments</label>
+        <div id="ares-pending-list" class="ares-pending-list"></div>
+        <div class="ares-attach-btns">
+          <label class="ares-attach-btn" for="ares-file-input">📎 Attach File</label>
+          <input type="file" id="ares-file-input" accept="image/*,application/pdf,.pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" multiple style="display:none">
+          <label class="ares-attach-btn" for="ares-cam-input">📷 Take Photo</label>
+          <input type="file" id="ares-cam-input" accept="image/*" capture="environment" style="display:none">
+        </div>
+      </div>
+
+      <div class="ares-scrapbook-row">
+        <span class="ares-scrapbook-label">📸 Add photos to Scrapbook</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="ares-scrapbook">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <button class="save-btn" id="ares-save-btn">Save Resource ✓</button>
+      <button class="ares-cancel-btn" id="ares-cancel-btn">Cancel</button>
+    </div>
+  `;
+  document.body.appendChild(sheet);
+
+  const pendingAttachments = [];
+  let selectedType = RESOURCE_TYPES[0].key;
+
+  function updateFieldVisibility(type) {
+    const visibleFields = RESOURCE_TYPE_FIELDS[type] || [];
+    sheet.querySelectorAll('.add-resource-sheet [data-field]').forEach(el => {
+      const field = el.dataset.field;
+      el.style.display = visibleFields.includes(field) ? '' : 'none';
+    });
+    // Apply label overrides for this type
+    const labelOverrides = RESOURCE_FIELD_LABELS[type] || {};
+    sheet.querySelectorAll('[data-label]').forEach(el => {
+      const key = el.dataset.label;
+      if (labelOverrides[key]) {
+        el.textContent = labelOverrides[key];
+      } else {
+        // Restore defaults
+        const defaults = {
+          'bookingref': 'Booking Ref', 'from-to': 'From / To',
+          'dep-datetime': 'Departure Date & Time', 'checkin': 'Check-in Date',
+          'checkin-time': 'Check-in Time', 'location': 'Location',
+          'arr-datetime': 'Arrival Date & Time', 'res-datetime': 'Reservation Date & Time',
+        };
+        if (defaults[key]) el.textContent = defaults[key];
+      }
+    });
+  }
+
+  // Apply initial field visibility
+  updateFieldVisibility(selectedType);
+
+  // Type chip selection
+  sheet.querySelectorAll('.resource-type-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      sheet.querySelectorAll('.resource-type-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      selectedType = chip.dataset.type;
+      updateFieldVisibility(selectedType);
+    });
+  });
+
+  function renderPending() {
+    const container = document.getElementById('ares-pending-list');
+    if (!container) return;
+    if (!pendingAttachments.length) { container.innerHTML = ''; return; }
+    container.innerHTML = pendingAttachments.map((att, i) => {
+      const isImg = att.fileType && att.fileType.startsWith('image/');
+      return `<div class="ares-pending-item">
+        ${isImg ? `<img class="ares-pending-thumb" src="${att.data}" alt="">` : `<div class="ares-pending-icon">📄</div>`}
+        <input class="ares-attach-label" type="text" value="${escHtml(att.label)}" placeholder="Label..." data-idx="${i}">
+        <button class="ares-pending-remove" data-idx="${i}">✕</button>
+      </div>`;
+    }).join('');
+    container.querySelectorAll('.ares-attach-label').forEach(inp => {
+      inp.addEventListener('input', () => {
+        const idx = parseInt(inp.dataset.idx);
+        if (pendingAttachments[idx]) pendingAttachments[idx].label = inp.value;
+      });
+    });
+    container.querySelectorAll('.ares-pending-remove').forEach(btn => {
+      btn.addEventListener('click', () => { pendingAttachments.splice(parseInt(btn.dataset.idx), 1); renderPending(); });
+    });
+  }
+
+  async function handleFiles(files) {
+    const quality = App.settings.photos.quality === 'high' ? 0.9 : 0.7;
+    const maxDim = App.settings.photos.quality === 'high' ? 1600 : 1200;
+    for (const file of Array.from(files)) {
+      const data = file.type.startsWith('image/')
+        ? await compressImage(file, maxDim, quality)
+        : await fileToBase64(file);
+      if (data) {
+        pendingAttachments.push({
+          id: crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36),
+          label: file.name.replace(/\.[^/.]+$/, ''),
+          fileName: file.name, fileType: file.type, data,
+          addedAt: new Date().toISOString()
+        });
+        renderPending();
+      }
+    }
+  }
+
+  document.getElementById('ares-file-input').addEventListener('change', async e => { await handleFiles(e.target.files); e.target.value = ''; });
+  document.getElementById('ares-cam-input').addEventListener('change', async e => { await handleFiles(e.target.files); e.target.value = ''; });
+
+  document.getElementById('ares-save-btn').addEventListener('click', async () => {
+    const title = document.getElementById('ares-title').value.trim();
+    if (!title) { showToast('Please enter a title'); return; }
+
+    const addToScrapbook = document.getElementById('ares-scrapbook').checked;
+    if (!gig.resources) gig.resources = [];
+
+    const aresPrice = document.getElementById('ares-price').value;
+    const aresQty = document.getElementById('ares-qty').value;
+    const v = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+    const newResource = {
+      id: crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36),
+      title,
+      type: selectedType,
+      bookingRef: v('ares-bookingref') || null,
+      flightNo: v('ares-flightno') || null,
+      from: v('ares-from') || null,
+      to: v('ares-to') || null,
+      depDate: v('ares-depdate') || null,
+      depTime: v('ares-deptime') || null,
+      checkin: v('ares-checkin') || null,
+      checkout: v('ares-checkout') || null,
+      checkinTime: v('ares-checkintime') || null,
+      location: v('ares-location') || null,
+      arrDate: v('ares-arrdate') || null,
+      arrTime: v('ares-arrtime') || null,
+      resDate: v('ares-resdate') || null,
+      resTime: v('ares-restime') || null,
+      covers: v('ares-covers') ? parseInt(v('ares-covers')) : null,
+      price: aresPrice ? parseFloat(aresPrice) : null,
+      quantity: parseInt(aresQty) || 1,
+      bookedVia: v('ares-bookedvia') || null,
+      presaleCode: v('ares-presale') || null,
+      onSaleDate: v('ares-onsale') || null,
+      notes: v('ares-notes'),
+      addToScrapbook,
+      attachments: [...pendingAttachments],
+      createdAt: new Date().toISOString()
+    };
+    gig.resources.push(newResource);
+
+    if (addToScrapbook) {
+      if (!gig.scrapbook) gig.scrapbook = { photos: [] };
+      pendingAttachments.forEach(att => {
+        if (att.fileType && att.fileType.startsWith('image/')) {
+          gig.scrapbook.photos.push({
+            id: crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-sc',
+            dataUrl: att.data,
+            caption: att.label || title,
+            category: 'photo',
+            addedAt: att.addedAt
+          });
+        }
+      });
+    }
+
+    await DB.saveGig(gig);
+    App.allGigs = await DB.getAllGigs();
+    sheet.remove();
+
+    const list = document.getElementById('resources-list');
+    if (list) list.innerHTML = (gig.resources || []).map(r => renderResourceCard(r)).join('') ||
+      `<div class="resources-empty">No resources yet — add tickets, hotel bookings, train tickets and more.</div>`;
+    attachResourceListeners(gig);
+    showToast(`"${title}" added!`);
+  });
+
+  document.getElementById('ares-cancel-btn').addEventListener('click', () => sheet.remove());
+  sheet.addEventListener('click', e => { if (e.target === sheet) sheet.remove(); });
+  setTimeout(() => document.getElementById('ares-title')?.focus(), 150);
+}
+
+function attachResourceListeners(gig) {
+  // Expand / collapse cards
+  document.querySelectorAll('.resource-card-header').forEach(header => {
+    header.addEventListener('click', e => {
+      if (e.target.closest('.resource-delete-btn')) return;
+      header.closest('.resource-card').classList.toggle('expanded');
+    });
+  });
+
+  // Delete resource
+  document.querySelectorAll('.resource-delete-btn').forEach(btn => {
+    btn.addEventListener('click', async e => {
+      e.stopPropagation();
+      const rid = btn.dataset.resourceId;
+      if (!confirm('Remove this resource?')) return;
+      gig.resources = (gig.resources || []).filter(r => r.id !== rid);
+      await DB.saveGig(gig);
+      App.allGigs = await DB.getAllGigs();
+      document.querySelector(`.resource-card[data-resource-id="${rid}"]`)?.remove();
+      const list = document.getElementById('resources-list');
+      if (list && !list.querySelector('.resource-card'))
+        list.innerHTML = `<div class="resources-empty">No resources yet — add tickets, hotel bookings, train tickets and more.</div>`;
+    });
+  });
+
+  // Add file/photo to existing resource
+  document.querySelectorAll('input[id^="res-file-"], input[id^="res-cam-"]').forEach(input => {
+    input.addEventListener('change', async e => {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+      const rid = input.dataset.resourceId;
+      const resource = (gig.resources || []).find(r => r.id === rid);
+      if (!resource) return;
+      const quality = App.settings.photos.quality === 'high' ? 0.9 : 0.7;
+      const maxDim = App.settings.photos.quality === 'high' ? 1600 : 1200;
+      showToast('Adding...');
+      for (const file of files) {
+        const data = file.type.startsWith('image/')
+          ? await compressImage(file, maxDim, quality)
+          : await fileToBase64(file);
+        if (data) {
+          if (!resource.attachments) resource.attachments = [];
+          resource.attachments.push({
+            id: crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36),
+            label: file.name.replace(/\.[^/.]+$/, ''),
+            fileName: file.name, fileType: file.type, data,
+            addedAt: new Date().toISOString()
+          });
+        }
+      }
+      await DB.saveGig(gig);
+      App.allGigs = await DB.getAllGigs();
+      const card = document.querySelector(`.resource-card[data-resource-id="${rid}"]`);
+      if (card) {
+        const wasExpanded = card.classList.contains('expanded');
+        card.outerHTML = renderResourceCard(resource);
+        if (wasExpanded) document.querySelector(`.resource-card[data-resource-id="${rid}"]`)?.classList.add('expanded');
+      }
+      attachResourceListeners(gig);
+      input.value = '';
+      showToast('Attachment added!');
+    });
+  });
+
+  // Remove attachment from existing resource
+  document.querySelectorAll('.rattach-remove-btn').forEach(btn => {
+    btn.addEventListener('click', async e => {
+      e.stopPropagation();
+      const aid = btn.dataset.attachId;
+      const rid = btn.dataset.resourceId;
+      const resource = (gig.resources || []).find(r => r.id === rid);
+      if (!resource) return;
+      resource.attachments = (resource.attachments || []).filter(a => a.id !== aid);
+      await DB.saveGig(gig);
+      App.allGigs = await DB.getAllGigs();
+      const card = document.querySelector(`.resource-card[data-resource-id="${rid}"]`);
+      if (card) {
+        card.outerHTML = renderResourceCard(resource);
+        document.querySelector(`.resource-card[data-resource-id="${rid}"]`)?.classList.add('expanded');
+      }
+      attachResourceListeners(gig);
+    });
+  });
+
+  // Tap image to preview full-size
+  document.querySelectorAll('.rattach-item').forEach(item => {
+    item.addEventListener('click', e => {
+      if (e.target.closest('.rattach-remove-btn')) return;
+      const rid = item.dataset.resourceId;
+      const aid = item.dataset.attachId;
+      const resource = (gig.resources || []).find(r => r.id === rid);
+      const att = resource && (resource.attachments || []).find(a => a.id === aid);
+      if (att && att.fileType && att.fileType.startsWith('image/')) {
+        const overlay = document.createElement('div');
+        overlay.className = 'attach-preview-overlay';
+        overlay.innerHTML = `<img src="${att.data}" alt="${escHtml(att.label)}"><div class="attach-preview-close">✕</div>`;
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', () => overlay.remove());
+      }
+    });
+  });
+
+  // + Add Resource button
+  document.getElementById('btn-add-resource')?.addEventListener('click', () => openAddResourceSheet(gig));
+}
+
 function attachDocumentRemoveListeners(gig) {
   document.querySelectorAll('.attach-remove-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => {
@@ -1936,11 +2424,11 @@ function renderSettings() {
       <div class="settings-section-title">Quick Ticket Links</div>
       <div class="settings-card">
         <div class="ticket-links-grid">
-          <a href="https://www.ticketmaster.co.uk" target="_blank" class="ticket-link-btn">🎟 Ticketmaster</a>
-          <a href="https://www.seetickets.com" target="_blank" class="ticket-link-btn">🎟 See Tickets</a>
+          <a href="${AFFILIATE.ticketmaster}" target="_blank" class="ticket-link-btn">🎟 Ticketmaster</a>
+          <a href="${AFFILIATE.seetickets}" target="_blank" class="ticket-link-btn">🎟 See Tickets</a>
           <a href="https://dice.fm" target="_blank" class="ticket-link-btn">🎲 DICE</a>
-          <a href="https://www.gigantic.com" target="_blank" class="ticket-link-btn">🎸 Gigantic</a>
-          <a href="https://www.skiddle.com" target="_blank" class="ticket-link-btn">🎵 Skiddle</a>
+          <a href="${AFFILIATE.gigantic}" target="_blank" class="ticket-link-btn">🎸 Gigantic</a>
+          <a href="${AFFILIATE.skiddle}" target="_blank" class="ticket-link-btn">🎵 Skiddle</a>
           <a href="https://www.songkick.com" target="_blank" class="ticket-link-btn">🎤 Songkick</a>
           <a href="https://www.axs.com" target="_blank" class="ticket-link-btn">🎪 AXS</a>
           <a href="https://www.ents24.com" target="_blank" class="ticket-link-btn">📅 Ents24</a>
@@ -1987,6 +2475,40 @@ function renderSettings() {
         </label>
         <input type="file" id="restore-input" accept=".json,application/json" style="display:none">
         <button class="data-action-btn danger" id="btn-clear-data">🗑 Clear All Data</button>
+      </div>
+    </div>
+
+    <!-- Support MyGigLife -->
+    <div class="settings-section">
+      <div class="settings-section-title">Support MyGigLife</div>
+      <div class="settings-card">
+        <p class="tip-jar-message">MyGigLife is free and always will be. If it's made your gig life easier, you can say thanks here!</p>
+        <div class="tip-jar-grid">
+          <a href="${AFFILIATE.kofi}?amount=3" target="_blank" class="tip-jar-btn">
+            <span class="tip-jar-icon">🍺</span>
+            <span class="tip-jar-label">Buy me a pint</span>
+            <span class="tip-jar-amount">£3</span>
+          </a>
+          <a href="${AFFILIATE.kofi}?amount=10" target="_blank" class="tip-jar-btn">
+            <span class="tip-jar-icon">🎫</span>
+            <span class="tip-jar-label">Buy me a ticket</span>
+            <span class="tip-jar-amount">£10</span>
+          </a>
+          <a href="${AFFILIATE.kofi}?amount=50" target="_blank" class="tip-jar-btn">
+            <span class="tip-jar-icon">🎪</span>
+            <span class="tip-jar-label">Buy me a festival pass</span>
+            <span class="tip-jar-amount">£50</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- About -->
+    <div class="settings-section">
+      <div class="settings-section-title">About</div>
+      <div class="settings-card">
+        <p class="about-made-by">Made with 🎸 by <a href="https://andyapps.uk" target="_blank" class="about-link">Andy at andyapps.uk</a></p>
+        <p class="about-disclosure">MyGigLife is free to use. Some links to ticket platforms and hotel booking sites are affiliate links, which means we earn a small commission if you make a purchase — at no extra cost to you. This helps keep the app free and supports future development.</p>
       </div>
     </div>
 
@@ -2536,25 +3058,25 @@ function buildAppShell() {
     <!-- Bottom Navigation -->
     <nav id="bottom-nav">
       <button class="nav-item active" data-screen="calendar">
-        <span class="nav-icon">📅</span>
+        <img class="nav-icon-img" src="nav-calendar.png" alt="Calendar">
         <span class="nav-label">Calendar</span>
       </button>
       <button class="nav-item" data-screen="gigs">
-        <span class="nav-icon">🎸</span>
+        <img class="nav-icon-img" src="nav-mygigs.png" alt="My Gigs">
         <span class="nav-label">My Gigs</span>
       </button>
       <button class="nav-item nav-item-add" id="nav-add-btn">
         <div class="nav-add-circle">
-          <span class="nav-add-icon">＋</span>
+          <img class="nav-icon-img nav-add-img" src="nav-add.png" alt="Add">
         </div>
         <span class="nav-label">Add</span>
       </button>
       <button class="nav-item" data-screen="scrapbook">
-        <span class="nav-icon">📸</span>
+        <img class="nav-icon-img" src="nav-scrapbook.png" alt="Scrapbook">
         <span class="nav-label">Scrapbook</span>
       </button>
       <button class="nav-item" data-screen="stats">
-        <span class="nav-icon">📊</span>
+        <img class="nav-icon-img" src="nav-stats.png" alt="Stats">
         <span class="nav-label">Stats</span>
       </button>
     </nav>
