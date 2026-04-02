@@ -196,7 +196,7 @@ a {
 
 .sub-header-title {
   font-family: 'Caveat', cursive;
-  font-size: 24px;
+  font-size: 27px;
   font-weight: 700;
   flex: 1;
 }
@@ -237,6 +237,8 @@ a {
   pointer-events: none;
   transition: opacity 0.25s ease;
   -webkit-overflow-scrolling: touch;
+  /* Ensure content scrolls clear of the fixed nav bar */
+  padding-bottom: calc(var(--nav-height) + 16px);
 }
 
 .screen.active {
@@ -401,7 +403,7 @@ a {
 
 .month-name {
   font-family: 'Caveat', cursive;
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 700;
   color: var(--text-primary);
   text-align: center;
@@ -531,7 +533,7 @@ a {
 
 .section-title {
   font-family: 'Caveat', cursive;
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 12px;
@@ -729,7 +731,7 @@ a {
 
 .gigs-section-header {
   font-family: 'Caveat', cursive;
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 600;
   color: var(--text-secondary);
   margin: 16px 0 10px;
@@ -902,7 +904,7 @@ a {
 
 .modal-title {
   font-family: 'Caveat', cursive;
-  font-size: 24px;
+  font-size: 27px;
   font-weight: 700;
   flex: 1;
 }
@@ -1591,7 +1593,7 @@ a {
 
 .scrapbook-empty-text {
   font-family: 'Caveat', cursive;
-  font-size: 20px;
+  font-size: 23px;
   color: var(--text-secondary);
 }
 
@@ -1625,7 +1627,7 @@ a {
 
 .viewer-artist-name {
   font-family: 'Caveat', cursive;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
   color: #f0f0f0;
   flex: 1;
@@ -1677,9 +1679,14 @@ a {
   padding: 20px var(--screen-padding);
 }
 
+.viewer-main-wrap {
+  position: relative;
+  width: 100%;
+}
+
 .viewer-main-photo {
   width: 100%;
-  max-height: 280px;
+  max-height: 260px;
   object-fit: contain;
   border-radius: 4px;
 }
@@ -1724,6 +1731,44 @@ a {
 
 .viewer-dot.active {
   background: var(--accent-gold);
+}
+
+/* Prev/Next navigation buttons on main photo */
+.viewer-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 26px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s;
+}
+.viewer-nav-btn:disabled { opacity: 0.25; pointer-events: none; }
+.viewer-nav-btn:active { background: rgba(0,0,0,0.7); }
+.viewer-prev { left: 8px; }
+.viewer-next { right: 8px; }
+
+/* Photo counter badge */
+.viewer-photo-counter {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 13px;
+  padding: 2px 8px;
+  border-radius: 10px;
 }
 
 .viewer-caption {
@@ -1968,7 +2013,7 @@ a {
 
 .ranked-num {
   font-family: 'Caveat', cursive;
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 700;
   color: var(--text-secondary);
   width: 24px;
@@ -2023,7 +2068,7 @@ a {
 
 .settings-section-title {
   font-family: 'Caveat', cursive;
-  font-size: 22px;
+  font-size: 25px;
   font-weight: 700;
   color: var(--text-secondary);
   margin-bottom: 8px;
@@ -2293,7 +2338,7 @@ a {
 
 .confirm-title {
   font-family: 'Caveat', cursive;
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 700;
   margin-bottom: 8px;
   color: var(--text-primary);
@@ -2798,7 +2843,7 @@ a {
 
 .add-resource-title {
   font-family: 'Caveat', cursive;
-  font-size: 22px;
+  font-size: 25px;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 16px;
@@ -3856,7 +3901,7 @@ a {
 
 .backup-type-title {
   font-family: 'Caveat', cursive;
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 14px;

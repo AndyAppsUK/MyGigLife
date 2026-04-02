@@ -238,7 +238,7 @@ function createGigTemplate(overrides = {}) {
     status: 'wishlist',
     venue: { name: '', address: '', postcode: '', website: '', latitude: null, longitude: null },
     times: { doors: '', stage: '' },
-    tickets: { bookingRef: '', price: null, quantity: 1, bookedVia: '', presaleCode: '', onSaleDate: '' },
+    tickets: { bookingRef: '', approxPrice: '', quantity: 1, bookedVia: '', presaleCode: '', onSaleDate: '' },
     people: { goingWith: [] },
     supportActs: [],
     transport: '',
@@ -553,8 +553,10 @@ function updateGigsListDOM() {
   today.setHours(0, 0, 0, 0);
 
   // Sort: upcoming first (by date asc), then past (by date desc)
+  // Status takes priority: attended/dna are always Past regardless of date
   const upcoming = App.filteredGigs
     .filter(g => {
+      if (g.status === 'attended' || g.status === 'dna') return false;
       const [y,m,d] = g.date.split('-').map(Number);
       return new Date(y,m-1,d) >= today;
     })
@@ -562,6 +564,7 @@ function updateGigsListDOM() {
 
   const past = App.filteredGigs
     .filter(g => {
+      if (g.status === 'attended' || g.status === 'dna') return true;
       const [y,m,d] = g.date.split('-').map(Number);
       return new Date(y,m-1,d) < today;
     })
@@ -695,7 +698,7 @@ async function saveAddGigForm() {
     },
     tickets: {
       bookingRef: document.getElementById('field-bookingref').value.trim(),
-      price: document.getElementById('field-price').value ? parseFloat(document.getElementById('field-price').value) : null,
+      approxPrice: document.getElementById('field-price').value.trim(),
       quantity: parseInt(document.getElementById('field-qty').value) || 1,
       bookedVia: document.getElementById('field-bookedvia').value,
       presaleCode: document.getElementById('field-presale').value.trim(),
@@ -967,8 +970,8 @@ function renderDossier(gig) {
     progressBtn = `<button class="dossier-action-btn attended-action" id="progress-btn">Mark as Attended ✓</button>`;
   }
 
-  // Ticket total
-  const ticketTotal = tickets.price && tickets.quantity ? (tickets.price * tickets.quantity).toFixed(2) : null;
+  // Approx ticket price (text note only, not used in calculations)
+  const approxPriceNote = tickets.approxPrice || null;
 
   // Support acts
   const supportsHTML = gig.supportActs && gig.supportActs.length
@@ -1408,6 +1411,14 @@ async function updateGigStatus(gigId, newStatus) {
   const updated = App.allGigs.find(g => g.id === gigId);
   renderDossier(updated);
   showToast(`Marked as ${statusLabel(newStatus)}`);
+
+  // If newly booked or attended, prompt to add ticket resource if none exists
+  if (newStatus === 'booked' || newStatus === 'attended') {
+    const hasEticket = (updated.resources || []).some(r => r.type === 'eticket');
+    if (!hasEticket) {
+      setTimeout(() => openAddResourceSheet(updated, 'eticket'), 350);
+    }
+  }
 }
 
 async function saveDossierEdits(gigId) {
@@ -1443,7 +1454,7 @@ async function saveDossierEdits(gigId) {
   if (bookingRefEl) gig.tickets.bookingRef = bookingRefEl.value.trim();
 
   const priceEl = document.getElementById('edit-price');
-  if (priceEl) gig.tickets.price = priceEl.value ? parseFloat(priceEl.value) : null;
+  if (priceEl) gig.tickets.approxPrice = priceEl.value.trim();
 
   const qtyEl = document.getElementById('edit-qty');
   if (qtyEl) gig.tickets.quantity = parseInt(qtyEl.value) || 1;
@@ -1607,7 +1618,14 @@ function renderScrapbookViewer(gig) {
   viewerBody.innerHTML = `
     <div class="viewer-photos-area" id="viewer-photos-area">
       ${photos.length > 0 ? `
-        <img class="viewer-main-photo" id="viewer-main-photo" src="${currentPhoto.data}" alt="Gig photo">
+        <div class="viewer-main-wrap">
+          <img class="viewer-main-photo" id="viewer-main-photo" src="${currentPhoto.data}" alt="Gig photo">
+          ${photos.length > 1 ? `
+            <button class="viewer-nav-btn viewer-prev" id="viewer-prev" ${idx === 0 ? 'disabled' : ''}>‹</button>
+            <button class="viewer-nav-btn viewer-next" id="viewer-next" ${idx === photos.length - 1 ? 'disabled' : ''}>›</button>
+            <div class="viewer-photo-counter">${idx + 1} / ${photos.length}</div>
+          ` : ''}
+        </div>
         ${dotsHTML}
         ${photos.length > 1 ? `
         <div class="viewer-photo-grid" id="viewer-photo-grid">
@@ -1631,6 +1649,20 @@ function renderScrapbookViewer(gig) {
       <div class="viewer-notes" contenteditable="true" id="viewer-notes" placeholder="Add notes about this gig...">${escHtml(gig.notes || '')}</div>
     </div>
   `;
+
+  // Prev / Next buttons
+  const prevBtn = document.getElementById('viewer-prev');
+  const nextBtn = document.getElementById('viewer-next');
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      if (App.currentPhotoIndex > 0) { App.currentPhotoIndex--; renderScrapbookViewer(gig); }
+    });
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      if (App.currentPhotoIndex < photos.length - 1) { App.currentPhotoIndex++; renderScrapbookViewer(gig); }
+    });
+  }
 
   // Thumbnail clicks
   const grid = document.getElementById('viewer-photo-grid');
@@ -1723,12 +1755,13 @@ const RESOURCE_FIELD_LABELS = {
   restaurant: { 'res-datetime': 'Reservation Date & Time' },
 };
 
-function openAddResourceSheet(gig) {
+function openAddResourceSheet(gig, preselectedType = null) {
   const existing = document.getElementById('add-resource-sheet');
   if (existing) existing.remove();
 
-  const typeChips = RESOURCE_TYPES.map((t, i) =>
-    `<button class="resource-type-chip${i === 0 ? ' active' : ''}" data-type="${t.key}">${t.icon} ${t.label}</button>`
+  const defaultType = preselectedType || RESOURCE_TYPES[0].key;
+  const typeChips = RESOURCE_TYPES.map(t =>
+    `<button class="resource-type-chip${t.key === defaultType ? ' active' : ''}" data-type="${t.key}">${t.icon} ${t.label}</button>`
   ).join('');
 
   const sheet = document.createElement('div');
@@ -1873,7 +1906,7 @@ function openAddResourceSheet(gig) {
   document.body.appendChild(sheet);
 
   const pendingAttachments = [];
-  let selectedType = RESOURCE_TYPES[0].key;
+  let selectedType = defaultType;
 
   function updateFieldVisibility(type) {
     const visibleFields = RESOURCE_TYPE_FIELDS[type] || [];
@@ -2239,10 +2272,17 @@ function renderStats() {
   const wishlist = gigs.filter(g => g.status === 'wishlist');
   const dna = gigs.filter(g => g.status === 'dna');
 
-  const totalSpent = attended.reduce((sum, g) => {
-    const price = g.tickets && g.tickets.price ? g.tickets.price : 0;
-    const qty = g.tickets && g.tickets.quantity ? g.tickets.quantity : 1;
-    return sum + (price * qty);
+  // Ticket spend: sum of eticket-type resources for attended gigs
+  const ticketSpend = attended.reduce((sum, g) => {
+    return sum + (g.resources || [])
+      .filter(r => r.type === 'eticket')
+      .reduce((s, r) => s + ((parseFloat(r.price) || 0) * (parseInt(r.quantity) || 1)), 0);
+  }, 0);
+
+  // Total expenses: sum of ALL resource prices for attended gigs
+  const totalExpenses = attended.reduce((sum, g) => {
+    return sum + (g.resources || [])
+      .reduce((s, r) => s + ((parseFloat(r.price) || 0) * (parseInt(r.quantity) || 1)), 0);
   }, 0);
 
   const uniqueArtists = new Set(attended.map(g => g.artist.toLowerCase())).size;
@@ -2267,7 +2307,7 @@ function renderStats() {
 
   // Budget
   const annualBudget = App.settings.budget ? App.settings.budget.annual : 0;
-  const budgetPct = annualBudget > 0 ? Math.min(100, Math.round((totalSpent / annualBudget) * 100)) : 0;
+  const budgetPct = annualBudget > 0 ? Math.min(100, Math.round((totalExpenses / annualBudget) * 100)) : 0;
 
   // Year label text
   let yearLabelText = '';
@@ -2290,8 +2330,12 @@ function renderStats() {
         <div class="stat-label">Gigs Attended</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number">£${totalSpent.toFixed(0)}</div>
-        <div class="stat-label">Total Spent</div>
+        <div class="stat-number">£${ticketSpend.toFixed(0)}</div>
+        <div class="stat-label">Ticket Spend</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">£${totalExpenses.toFixed(0)}</div>
+        <div class="stat-label">Total Expenses</div>
       </div>
       <div class="stat-card">
         <div class="stat-number">${uniqueArtists}</div>
@@ -2308,15 +2352,15 @@ function renderStats() {
     <div class="stats-budget-card">
       <div class="stats-card-title">💰 Budget Tracker</div>
       <div class="budget-amounts">
-        <span>Spent: <span class="budget-spent">£${totalSpent.toFixed(2)}</span></span>
+        <span>Expenses: <span class="budget-spent">£${totalExpenses.toFixed(2)}</span></span>
         <span>Budget: £${annualBudget}</span>
       </div>
       <div class="budget-progress-wrap">
         <div class="budget-progress-bar ${budgetPct >= 100 ? 'over-budget' : ''}" style="width:${budgetPct}%"></div>
       </div>
       <div class="budget-remaining">${budgetPct < 100
-        ? `£${(annualBudget - totalSpent).toFixed(2)} remaining (${budgetPct}% used)`
-        : `Over budget by £${(totalSpent - annualBudget).toFixed(2)}`
+        ? `£${(annualBudget - totalExpenses).toFixed(2)} remaining (${budgetPct}% used)`
+        : `Over budget by £${(totalExpenses - annualBudget).toFixed(2)}`
       }</div>
     </div>` : ''}
 
@@ -3128,11 +3172,8 @@ function buildAppShell() {
             </div>
 
             <div class="form-field">
-              <label class="form-label">Ticket Price (£)</label>
-              <div class="price-field-wrap">
-                <span class="price-prefix">£</span>
-                <input type="number" class="form-input" id="field-price" placeholder="0.00" min="0" step="0.01">
-              </div>
+              <label class="form-label">Approx Ticket Price</label>
+              <input type="text" class="form-input" id="field-price" placeholder="e.g. £45 or £45–£90">
             </div>
 
             <button type="button" class="more-details-toggle" id="more-details-btn">＋ Add more details</button>
