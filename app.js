@@ -2447,6 +2447,145 @@ function renderStats() {
 // ============================================================
 // Settings Screen
 // ============================================================
+// First Run Welcome
+// ============================================================
+function checkFirstRun() {
+  const seen = localStorage.getItem('mygiglife-welcomed');
+  if (seen) return;
+  const overlay = document.getElementById('welcome-overlay');
+  if (!overlay) return;
+  overlay.style.display = 'flex';
+  document.getElementById('welcome-get-started').addEventListener('click', () => {
+    overlay.style.display = 'none';
+    localStorage.setItem('mygiglife-welcomed', '1');
+  });
+}
+
+// ============================================================
+// Help Screen
+// ============================================================
+function openHelpScreen() {
+  renderHelpScreen();
+  document.getElementById('screen-help').classList.add('active');
+  document.getElementById('screen-help').querySelector('.sub-screen-content').scrollTop = 0;
+}
+
+function closeHelpScreen() {
+  document.getElementById('screen-help').classList.remove('active');
+}
+
+function renderHelpScreen() {
+  const container = document.getElementById('help-content');
+  if (!container) return;
+
+  const topics = [
+    {
+      icon: '➕',
+      q: 'Add a new gig',
+      a: `Tap the <strong>gold + button</strong> in the middle of the bottom bar. Enter the artist name and date — everything else is optional and can be added later. Set the status to <em>Wishlist</em> if you haven't booked yet, or <em>Booked</em> if you have. When you save a Booked gig you'll be prompted to record your ticket details straight away.`
+    },
+    {
+      icon: '🔄',
+      q: 'Change a gig\'s status',
+      a: `Open the gig (tap it in <em>My Gigs</em> or the <em>Calendar</em>). At the bottom of the Gig Dossier tap <strong>Mark as Booked</strong> or <strong>Mark as Attended</strong>. To mark a gig as <em>Did Not Attend (DNA)</em>, tap the DNA link near the bottom of the dossier.`
+    },
+    {
+      icon: '🎫',
+      q: 'Add ticket or booking details',
+      a: `Open the gig dossier and tap <strong>Tickets &amp; Bookings</strong> to expand that section, then tap <strong>＋ Add Resource</strong>. Choose the type (Gig Ticket, Hotel, Train, etc.) and fill in the details. Ticket prices entered here are used in your Stats totals.`
+    },
+    {
+      icon: '📝',
+      q: 'Edit a gig\'s details',
+      a: `Open the gig dossier and tap <strong>Edit</strong> in the top-right corner. All fields become editable. Tap <strong>Save</strong> when done. You can also tap directly on collapsible cards (When, Venue, Notes etc.) to expand them.`
+    },
+    {
+      icon: '🗑',
+      q: 'Delete a gig',
+      a: `Open the gig dossier, scroll to the bottom and tap the red <strong>🗑 Delete Gig</strong> button. This permanently removes the gig and all its resources and photos.`
+    },
+    {
+      icon: '📸',
+      q: 'Add photos to the Scrapbook',
+      a: `Open a gig dossier for an <em>Attended</em> gig and tap <strong>📸 Open Scrapbook</strong>. Tap the <strong>＋ Add Photo</strong> button to upload from your library or take a photo. You can also attach photos to resources (e.g. a photo of your ticket) by tapping the attachment icon inside a resource panel and toggling <em>Add to Scrapbook</em>.`
+    },
+    {
+      icon: '📅',
+      q: 'Use the Calendar',
+      a: `The <strong>Calendar</strong> tab shows all your gigs as coloured dots. Tap any date to see what's on. Use the <strong>◀ ▶</strong> arrows to move between months. The <em>Coming Up</em> section below the calendar shows your next 5 upcoming gigs.`
+    },
+    {
+      icon: '🔍',
+      q: 'Search for a gig',
+      a: `Go to the <strong>My Gigs</strong> tab and type in the search box at the top. It searches across artist names and venue names. Use the filter tabs (All / Wishlist / Booked / Past / DNA) to narrow the list.`
+    },
+    {
+      icon: '📊',
+      q: 'View my stats',
+      a: `Tap the <strong>Stats</strong> tab. Use the <em>Month / Year / All Time</em> buttons at the top to change the period. Stats include gigs attended, ticket spend, total expenses (including hotels, travel etc.), and your most visited venues. Set an annual budget in <em>Settings</em> to see a budget tracker.`
+    },
+    {
+      icon: '💾',
+      q: 'Back up my data',
+      a: `Go to <strong>Settings</strong> (⚙ icon top right) and tap <strong>Backup Now</strong>. This downloads a JSON file — save it to your cloud storage or email it to yourself. To restore, use the <em>Restore from Backup</em> option in the same section and select your saved file. <em>Back up regularly — your data is stored on your device only.</em>`
+    },
+    {
+      icon: '📤',
+      q: 'Share a gig',
+      a: `Open the gig dossier and tap the <strong>Share 📤</strong> button. On mobile this opens your device's share sheet. On desktop it copies a summary to your clipboard.`
+    },
+    {
+      icon: '📆',
+      q: 'Add a gig to my phone calendar',
+      a: `Open the gig dossier and expand the <strong>When</strong> card, then tap <strong>📆 Add to Calendar</strong>. This downloads an ICS file that you can open to add the event to your phone's built-in calendar app.`
+    },
+    {
+      icon: '🎪',
+      q: 'Add a festival with a line-up',
+      a: `When adding a gig, tick <strong>🎪 This is a festival / multi-act event</strong>. You can set a start and end date. Once saved, open the dossier and expand the <strong>Line-Up</strong> card — tap <strong>+ Add Act</strong> to build out the full bill.`
+    },
+    {
+      icon: '⚙',
+      q: 'Change settings',
+      a: `Tap the <strong>⚙</strong> icon in the top-right corner. From here you can set your name, home postcode, annual budget, photo quality, and notification preferences. You can also manage backups and import data from this screen.`
+    },
+    {
+      icon: '❤️',
+      q: 'Support MyGigLife',
+      a: `MyGigLife is free and always will be. If you'd like to say thanks, tap the <strong>❤️ Support MyGigLife</strong> banner at the bottom of the screen to visit the tip jar.`
+    },
+  ];
+
+  container.innerHTML = `
+    <div class="help-container">
+      <p class="help-intro">Tap any question to see the answer.</p>
+      ${topics.map((t, i) => `
+        <div class="help-item" id="help-item-${i}">
+          <div class="help-question" data-idx="${i}">
+            <span class="help-icon">${t.icon}</span>
+            <span class="help-q-text">${t.q}</span>
+            <span class="help-chevron">⌄</span>
+          </div>
+          <div class="help-answer" id="help-ans-${i}">${t.a}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  // Expand / collapse
+  container.querySelectorAll('.help-question').forEach(q => {
+    q.addEventListener('click', () => {
+      const idx = q.dataset.idx;
+      const item = document.getElementById(`help-item-${idx}`);
+      const isOpen = item.classList.toggle('open');
+      q.querySelector('.help-chevron').textContent = isOpen ? '⌃' : '⌄';
+    });
+  });
+
+  document.getElementById('help-back-btn').addEventListener('click', closeHelpScreen);
+}
+
+// ============================================================
 // Support Screen
 // ============================================================
 function openSupportScreen() {
@@ -3063,6 +3202,9 @@ async function initApp() {
     // Check if a backup reminder is due
     checkBackupReminder();
 
+    // Show first-run welcome if needed
+    checkFirstRun();
+
     // Check for festival import via URL hash
     checkFestivalImport();
 
@@ -3080,6 +3222,7 @@ function buildAppShell() {
     <header id="app-header">
       <span id="app-title">MyGigLife</span>
       <div id="header-actions">
+        <button class="header-help-btn" id="btn-help" aria-label="Help">How do I...</button>
         <button class="header-btn" id="btn-settings" aria-label="Settings">⚙</button>
       </div>
     </header>
@@ -3330,6 +3473,48 @@ function buildAppShell() {
       <div class="sub-screen-content" id="scrapbook-viewer-body"></div>
     </div>
 
+    <!-- Help Sub-screen -->
+    <div class="sub-screen" id="screen-help">
+      <div style="height:var(--header-height);background:var(--header-bg);color:var(--header-text);display:flex;align-items:center;padding:0 15px;gap:8px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.2)">
+        <button class="sub-header-back" id="help-back-btn">‹</button>
+        <span class="sub-header-title">How do I...</span>
+      </div>
+      <div class="sub-screen-content" id="help-content"></div>
+    </div>
+
+    <!-- Welcome / First Run Overlay -->
+    <div id="welcome-overlay" style="display:none">
+      <div class="welcome-card">
+        <div class="welcome-icon">🎸</div>
+        <h2 class="welcome-title">Welcome to MyGigLife</h2>
+        <p class="welcome-intro">Your personal gig diary — all stored privately on your device.</p>
+        <div class="welcome-points">
+          <div class="welcome-point">
+            <span class="welcome-point-icon">🔒</span>
+            <div>
+              <strong>Your data stays on your phone.</strong>
+              <p>Nothing is sent to any server. No account needed. No one can see your gigs but you.</p>
+            </div>
+          </div>
+          <div class="welcome-point">
+            <span class="welcome-point-icon">💾</span>
+            <div>
+              <strong>Back up regularly.</strong>
+              <p>Because your data lives on your device, if you lose your phone or clear your browser you'll lose your gigs. Use the Backup option in Settings to save a copy to your files or cloud storage.</p>
+            </div>
+          </div>
+          <div class="welcome-point">
+            <span class="welcome-point-icon">📲</span>
+            <div>
+              <strong>Install it to your home screen.</strong>
+              <p>Tap Share → Add to Home Screen in your browser for the best experience.</p>
+            </div>
+          </div>
+        </div>
+        <button class="welcome-btn" id="welcome-get-started">Let's go! 🎶</button>
+      </div>
+    </div>
+
     <!-- Support Sub-screen -->
     <div class="sub-screen" id="screen-support">
       <div style="height:var(--header-height);background:var(--header-bg);color:var(--header-text);display:flex;align-items:center;padding:0 15px;gap:8px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.2)">
@@ -3430,6 +3615,11 @@ function attachGlobalListeners() {
       btn.textContent = isExpanded ? '− Less details' : '＋ Add more details';
       return;
     }
+  });
+
+  // Help button
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#btn-help')) openHelpScreen();
   });
 
   // Support banner

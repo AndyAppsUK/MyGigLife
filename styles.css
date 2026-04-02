@@ -376,6 +376,199 @@ a {
   letter-spacing: 0.3px;
 }
 
+/* ============================================================
+   Help Button (header)
+   ============================================================ */
+.header-help-btn {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 14px;
+  padding: 5px 11px;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.header-help-btn:hover,
+.header-help-btn:active {
+  background: rgba(255,255,255,0.25);
+}
+
+/* ============================================================
+   Help Screen
+   ============================================================ */
+.help-container {
+  padding: 12px 15px 24px;
+}
+
+.help-intro {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin: 0 0 12px;
+}
+
+.help-item {
+  border: 1px solid var(--border-light);
+  border-radius: var(--card-radius);
+  margin-bottom: 8px;
+  background: var(--bg-white);
+  overflow: hidden;
+}
+
+.help-question {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.help-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.help-q-text {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 16px;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.help-chevron {
+  font-size: 18px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.help-answer {
+  display: none;
+  padding: 0 14px 14px 42px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.help-answer strong {
+  color: var(--text-primary);
+}
+
+.help-item.open .help-answer {
+  display: block;
+}
+
+.help-item.open {
+  border-color: var(--accent-gold);
+}
+
+.help-item.open .help-question {
+  background: var(--bg-cream);
+}
+
+/* ============================================================
+   Welcome / First Run Overlay
+   ============================================================ */
+#welcome-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.welcome-card {
+  background: var(--bg-white);
+  border-radius: 16px;
+  padding: 28px 22px 24px;
+  max-width: 420px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: center;
+}
+
+.welcome-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.welcome-title {
+  font-family: 'Caveat', cursive;
+  font-size: 30px;
+  color: var(--header-bg);
+  margin: 0 0 8px;
+}
+
+.welcome-intro {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0 0 20px;
+}
+
+.welcome-points {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.welcome-point {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.welcome-point-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.welcome-point strong {
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 15px;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.welcome-point p {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.welcome-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent-gold);
+  color: #333;
+  border-radius: 10px;
+  font-family: 'Patrick Hand', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.welcome-btn:hover,
+.welcome-btn:active {
+  opacity: 0.85;
+}
+
 /* Add Gig button (center, elevated) */
 .nav-item-add {
   position: relative;
