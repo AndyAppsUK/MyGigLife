@@ -314,8 +314,8 @@ a {
 
 /* Custom image nav icons */
 .nav-icon-img {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
   transition: transform 0.2s, opacity 0.2s;
   opacity: 0.55;
@@ -327,8 +327,8 @@ a {
 }
 
 .nav-add-img {
-  width: 30px;
-  height: 30px;
+  width: 38px;
+  height: 38px;
   opacity: 1;
 }
 
