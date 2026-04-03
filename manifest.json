@@ -1,12 +1,17 @@
 {
+  "id": "/",
   "name": "MyGigLife",
   "short_name": "MyGigLife",
   "description": "Your live music life, all in one place",
+  "lang": "en-GB",
+  "dir": "ltr",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f5f0e8",
   "theme_color": "#4a3f35",
   "orientation": "portrait",
+  "categories": ["entertainment", "music", "lifestyle"],
   "icons": [
     {
       "src": "icon-192.png",

@@ -2297,6 +2297,11 @@ function renderStats() {
   const container = document.getElementById('stats-container');
   if (!container) return;
 
+  // Sync period button active state
+  document.querySelectorAll('.period-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.period === App.statsPeriod);
+  });
+
   const period = App.statsPeriod;
   const now = new Date();
   const currentYear = now.getFullYear();
@@ -2325,16 +2330,27 @@ function renderStats() {
   const dna = gigs.filter(g => g.status === 'dna');
 
   // Ticket spend: sum of gigticket and eticket resources for attended gigs
+  // Falls back to legacy tickets.price for gigs created before the resources system
   const ticketSpend = attended.reduce((sum, g) => {
-    return sum + (g.resources || [])
-      .filter(r => r.type === 'gigticket' || r.type === 'eticket')
-      .reduce((s, r) => s + ((parseFloat(r.price) || 0) * (parseInt(r.quantity) || 1)), 0);
+    const resourceTickets = (g.resources || []).filter(r => r.type === 'gigticket' || r.type === 'eticket');
+    if (resourceTickets.length > 0) {
+      return sum + resourceTickets.reduce((s, r) => s + ((parseFloat(r.price) || 0) * (parseInt(r.quantity) || 1)), 0);
+    }
+    const legacyPrice = parseFloat(g.tickets && g.tickets.price) || 0;
+    const legacyQty = parseInt(g.tickets && g.tickets.quantity) || 1;
+    return sum + (legacyPrice * legacyQty);
   }, 0);
 
   // Total expenses: sum of ALL resource prices for attended gigs
+  // Falls back to legacy tickets.price for gigs with no resources at all
   const totalExpenses = attended.reduce((sum, g) => {
-    return sum + (g.resources || [])
-      .reduce((s, r) => s + ((parseFloat(r.price) || 0) * (parseInt(r.quantity) || 1)), 0);
+    const resources = g.resources || [];
+    if (resources.length > 0) {
+      return sum + resources.reduce((s, r) => s + ((parseFloat(r.price) || 0) * (parseInt(r.quantity) || 1)), 0);
+    }
+    const legacyPrice = parseFloat(g.tickets && g.tickets.price) || 0;
+    const legacyQty = parseInt(g.tickets && g.tickets.quantity) || 1;
+    return sum + (legacyPrice * legacyQty);
   }, 0);
 
   const uniqueArtists = new Set(attended.map(g => g.artist.toLowerCase())).size;
@@ -3336,7 +3352,7 @@ function buildAppShell() {
       <div class="screen" id="screen-stats">
         <div class="stats-period-toggle">
           <button class="period-btn" data-period="month">This Month</button>
-          <button class="period-btn active" data-period="year">This Year</button>
+          <button class="period-btn" data-period="year">This Year</button>
           <button class="period-btn" data-period="all">All Time</button>
         </div>
         <div id="stats-container"></div>
