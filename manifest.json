@@ -25,5 +25,42 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot_calendar.jpg",
+      "sizes": "1080x2400",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Calendar view showing upcoming gigs"
+    },
+    {
+      "src": "screenshot_my_gigs.jpg",
+      "sizes": "1080x2400",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "My Gigs list with filters"
+    },
+    {
+      "src": "screenshot_gig_dossier.jpg",
+      "sizes": "1080x2400",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Gig dossier with full event details"
+    },
+    {
+      "src": "screenshot_scrapbook.jpg",
+      "sizes": "1080x2400",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Scrapbook of gig memories and photos"
+    },
+    {
+      "src": "screenshot_stats.jpg",
+      "sizes": "1080x2400",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Stats showing gig spending and attendance"
+    }
   ]
 }
