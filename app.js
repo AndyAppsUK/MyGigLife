@@ -2329,9 +2329,12 @@ function renderStats() {
   const wishlist = gigs.filter(g => g.status === 'wishlist');
   const dna = gigs.filter(g => g.status === 'dna');
 
-  // Ticket spend: sum of gigticket and eticket resources for attended gigs
+  // Ticket spend and total expenses include both attended and booked gigs
+  const gigsCounted = [...attended, ...booked];
+
+  // Ticket spend: sum of gigticket and eticket resources
   // Falls back to legacy tickets.price for gigs created before the resources system
-  const ticketSpend = attended.reduce((sum, g) => {
+  const ticketSpend = gigsCounted.reduce((sum, g) => {
     const resourceTickets = (g.resources || []).filter(r => r.type === 'gigticket' || r.type === 'eticket');
     if (resourceTickets.length > 0) {
       return sum + resourceTickets.reduce((s, r) => s + ((parseFloat(r.price) || 0) * (parseInt(r.quantity) || 1)), 0);
@@ -2341,9 +2344,9 @@ function renderStats() {
     return sum + (legacyPrice * legacyQty);
   }, 0);
 
-  // Total expenses: sum of ALL resource prices for attended gigs
+  // Total expenses: sum of ALL resource prices
   // Falls back to legacy tickets.price for gigs with no resources at all
-  const totalExpenses = attended.reduce((sum, g) => {
+  const totalExpenses = gigsCounted.reduce((sum, g) => {
     const resources = g.resources || [];
     if (resources.length > 0) {
       return sum + resources.reduce((s, r) => s + ((parseFloat(r.price) || 0) * (parseInt(r.quantity) || 1)), 0);
