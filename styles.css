@@ -871,6 +871,8 @@ a {
 #screen-gigs {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  padding-bottom: 0;
 }
 
 .gigs-filter-bar {
@@ -970,6 +972,7 @@ a {
   flex: 1;
   overflow-y: auto;
   padding: var(--screen-padding);
+  padding-bottom: calc(var(--nav-height) + var(--support-banner-height) + 16px);
   -webkit-overflow-scrolling: touch;
 }
 
